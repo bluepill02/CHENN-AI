@@ -8,7 +8,7 @@ import { TamilKeyboard } from './TamilKeyboard';
 import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from './LanguageService';
+import { useLanguage } from '../services/LanguageService';
 import { MapPin, Send, ArrowLeft, Keyboard } from 'lucide-react';
 import chatConversations from 'figma:asset/d802a9fc88d5797d4e698a0f07c361b2d87a1818.png';
 

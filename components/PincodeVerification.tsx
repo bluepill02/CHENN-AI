@@ -5,9 +5,9 @@ import { Badge } from './ui/badge';
 import { Input } from './ui/input';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from './LanguageService';
+import { useLanguage } from '../services/LanguageService';
 import { MapPin, Shield, Users, CheckCircle, AlertCircle } from 'lucide-react';
-import { useLocation } from './LocationService';
+import { useLocation } from '../services/LocationService';
 import chennaiWaterfront from 'figma:asset/8ee111ffe3789e0e3d9ea32a4a2b2a606ac32e8f.png';
 
 interface PincodeVerificationProps {

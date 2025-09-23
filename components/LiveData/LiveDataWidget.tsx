@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { useLanguage } from '../../services/LanguageService';
-import { useRealTimeData } from '../../services/RealTimeDataService';
-import { useExternalData } from '../../services/ExternalDataService';
-import { formatTimestamp, getConnectionStatusColor, getTrafficStatusColor, getServiceStatusColor, getWeatherConditionIcon } from '../../utils';
-import { 
-  Zap, 
-  AlertTriangle, 
-  Thermometer, 
-  Car, 
-  Phone, 
-  Wifi, 
-  WifiOff, 
-  Clock,
+import TwitterFeedCard from "@/components/TwitterFeedCard";
+import {
   Activity,
+  AlertTriangle,
+  // NEW: Add Bus icon for bus data section
+  Bus,
+  Car,
   ChevronDown,
   ChevronUp,
-  RefreshCw
+  Clock,
+  Phone,
+  RefreshCw,
+  Thermometer,
+  Wifi,
+  WifiOff,
+  Zap
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { useExternalData } from '../../services/ExternalDataService';
+import { useLanguage } from '../../services/LanguageService';
+import { useRealTimeData } from '../../services/RealTimeDataService';
+import { formatTimestamp, getConnectionStatusColor, getServiceStatusColor, getTrafficStatusColor, getWeatherConditionIcon } from '../../utils';
+import { TimetableCard } from "../TimetableCard";
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card } from '../ui/card';
+import AutoShareCard from "./AutoShareCard";
 
 interface LiveDataWidgetProps {
   isExpanded?: boolean;
@@ -36,11 +41,38 @@ export function LiveDataWidget({ isExpanded = false, onToggle, className = '' }:
     lastUpdate,
     postsCount 
   } = useRealTimeData();
+  export default function LiveDataWidget() {
+  const language: "en" | "ta" = "en"; // or from context/state
+
+  return (
+    <div className="space-y-6">
+      {/* Top section */}
+      <div className="space-y-4">
+        {/* WeatherCard */}
+        {/* ParkingCard */}
+        <TimetableCard language={language} />
+      </div>
+
+      {/* Twitter feeds */}
+      <div className="grid gap-4">
+        <TwitterFeedCard category="traffic" />
+        <TwitterFeedCard category="civic" />
+        <TwitterFeedCard category="transport" />
+      </div>
+
+      {/* Auto Share */}
+      <AutoShareCard pincode="600020" />
+    </div>
+  );
+}
+
   
   const { 
     weather, 
     traffic, 
-    publicServices, 
+    publicServices,
+    // NEW: Add bus data from external data service  
+    busData,
     isLoading, 
     refreshData,
     isApiConnected,
@@ -57,6 +89,27 @@ export function LiveDataWidget({ isExpanded = false, onToggle, className = '' }:
     
     return () => clearInterval(interval);
   }, []);
+
+  const [cmrl, setCmrl] = useState<any[]>([]);
+const [apiStatus, setApiStatus] = useState({ ...apiStatus, cmrl: "loading" });
+// Fetch CMRL parking data every minute
+useEffect(() => {
+  async function fetchCMRL() {
+    try {
+      const res = await fetch("/api/cmrl");
+      const data = await res.json();
+      setCmrl(data);
+      setApiStatus(prev => ({ ...prev, cmrl: "ok" }));
+    } catch {
+      setApiStatus(prev => ({ ...prev, cmrl: "error" }));
+    }
+  }
+
+  fetchCMRL();
+  const interval = setInterval(fetchCMRL, 60000); // refresh every 1 min
+  return () => clearInterval(interval);
+}, []);
+
 
   const criticalAlerts = alerts.filter(alert => alert.severity === 'critical');
   const hasImportantData = criticalAlerts.length > 0 || 
@@ -220,6 +273,39 @@ export function LiveDataWidget({ isExpanded = false, onToggle, className = '' }:
             </Card>
           </div>
         )}
+        {/* CMRL Parking */}
+        
+{cmrl && cmrl.length > 0 && (
+  <div>
+    <h4 className="font-medium text-gray-800 flex items-center gap-2 mb-2">
+      <Train className="w-4 h-4" />
+      {language === 'ta' ? 'சென்னை மெட்ரோ' : 'Chennai Metro'}
+      <Badge className={`ml-auto ${getConnectionStatusColor(apiStatus.cmrl)}`}>
+        {apiStatus.cmrl}
+      </Badge>
+    </h4>
+    <Card className="p-3 border border-green-200">
+      <div className="space-y-2">
+        {cmrl.slice(0, 3).map((s, i) => (
+          <div key={i} className="flex items-center justify-between">
+            <div>
+              <div className="font-medium">{s.station}</div>
+              <div className="text-gray-600 text-sm">
+                {language === 'ta'
+                  ? `${s.available} இடங்கள் காலியாக உள்ளன`
+                  : `${s.available} slots free`}
+              </div>
+            </div>
+            <Badge className="bg-blue-500 text-white">
+              {s.available}
+            </Badge>
+          </div>
+        ))}
+      </div>
+    </Card>
+  </div>
+)}
+
 
         {/* Traffic */}
         {traffic && traffic.length > 0 && (
@@ -249,6 +335,64 @@ export function LiveDataWidget({ isExpanded = false, onToggle, className = '' }:
                   </div>
                 </Card>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* NEW: Live Bus Data */}
+        {busData && busData.length > 0 && (
+          <div>
+            <h4 className="font-medium text-gray-800 flex items-center gap-2 mb-2">
+              <Bus className="w-4 h-4" />
+              {language === 'ta' ? 'பேருந்து நேரடி தகவல்கள்' : 'Live Bus Data'}
+              <Badge className={`ml-auto ${getConnectionStatusColor(apiStatus.bus)}`}>
+                {apiStatus.bus}
+              </Badge>
+            </h4>
+            <div className="space-y-2">
+              {busData.slice(0, 4).map((bus, index) => (
+                <Card key={`${bus.routeNumber}-${index}`} className="p-3 border border-blue-200">
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="font-medium text-sm flex items-center gap-2">
+                        <span className="bg-blue-500 text-white px-2 py-1 rounded text-xs font-bold">
+                          {bus.routeNumber}
+                        </span>
+                        <span className="truncate">
+                          {language === 'ta' ? bus.routeNameTamil : bus.routeName}
+                        </span>
+                      </div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        {language === 'ta' ? bus.areaDisplayNameTamil : bus.areaDisplayName}
+                        {bus.nextArrival && (
+                          <span className="ml-2">
+                            • {language === 'ta' ? 'அடुத்து:' : 'Next:'} {bus.nextArrival}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge className={`${
+                        bus.busStatus === 'running' ? 'bg-green-500' :
+                        bus.busStatus === 'delayed' ? 'bg-yellow-500' :
+                        bus.busStatus === 'stopped' ? 'bg-red-500' : 'bg-gray-500'
+                      } text-white text-xs`}>
+                        {language === 'ta' ? bus.busStatusTamil : bus.busStatus}
+                      </Badge>
+                      {bus.busCount && (
+                        <div className="text-xs text-gray-500 mt-1">
+                          {bus.busCount} {language === 'ta' ? 'பேருந்துகள்' : 'buses'}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ))}
+              {busData.length > 4 && (
+                <div className="text-center text-xs text-gray-500">
+                  +{busData.length - 4} {language === 'ta' ? 'மேலும் வழித்தடங்கள்' : 'more routes'}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -285,6 +429,7 @@ export function LiveDataWidget({ isExpanded = false, onToggle, className = '' }:
             </div>
           </div>
         )}
+        
 
         {/* Connection Status */}
         <div className="pt-3 border-t border-gray-200">

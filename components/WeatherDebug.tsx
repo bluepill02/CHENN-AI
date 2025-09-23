@@ -1,8 +1,7 @@
-import React from 'react';
 import { useExternalData } from '../services/ExternalDataService';
-import { Card } from './ui/card';
-import { Badge } from './ui/badge';
 import { useLanguage } from '../services/LanguageService';
+import { Badge } from './ui/badge';
+import { Card } from './ui/card';
 
 // Debug component to verify WeatherAPI integration
 export function WeatherDebug() {

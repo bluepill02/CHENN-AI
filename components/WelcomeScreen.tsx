@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
 import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from './LanguageService';
+import { useLanguage } from '../services/LanguageService';
 import chennaiCityscape from 'figma:asset/7d7500ada15d497a9fc07f7ca36038f07b9ff493.png';
 import appLogo from 'figma:asset/4ed21f9248d086a0323ac9f747f709b581f13e8e.png';
 

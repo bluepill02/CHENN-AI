@@ -1,6 +1,4 @@
-import image_3517c13818645a7fbda74d51f10c38a0291a99d7 from 'figma:asset/3517c13818645a7fbda74d51f10c38a0291a99d7.png';
-import React from 'react';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import image_3517c13818645a7fbda74d51f10c38a0291a99d7 from '../assets/3517c13818645a7fbda74d51f10c38a0291a99d7.png';
 
 interface IllustratedIconProps {
   src: string;

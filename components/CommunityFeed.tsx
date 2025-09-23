@@ -6,10 +6,10 @@ import { Badge } from './ui/badge';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ChennaiPride } from './ChennaiPride';
 import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from './LanguageService';
+import { useLanguage } from '../services/LanguageService';
 import { Heart, MessageCircle, Share2, MapPin, Calendar, Star, Sparkles, Shield, Navigation } from 'lucide-react';
 import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
-import { useLocation, getLocationSpecificContent, getLocationAwarePosts } from './LocationService';
+import { useLocation, getLocationSpecificContent, getLocationAwarePosts } from '../services/LocationService';
 import communityScenes from 'figma:asset/39dd468cce8081c14f345796484cc8b182dc6bb6.png';
 
 interface CommunityFeedProps {

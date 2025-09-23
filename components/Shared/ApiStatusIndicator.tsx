@@ -1,9 +1,8 @@
-import React from 'react';
+import { AlertTriangle, CheckCircle, Loader2, Wifi, WifiOff, XCircle } from 'lucide-react';
+import { useExternalData } from '../../services/ExternalDataService';
+import { useLanguage } from '../../services/LanguageService';
 import { Badge } from '../ui/badge';
 import { Card } from '../ui/card';
-import { useLanguage } from '../../services/LanguageService';
-import { useExternalData } from '../../services/ExternalDataService';
-import { Wifi, WifiOff, Loader2, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 
 interface ApiStatusIndicatorProps {
   variant?: 'compact' | 'detailed';

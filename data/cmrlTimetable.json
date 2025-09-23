@@ -1,0 +1,95 @@
+{
+  "weekdays": {
+    "blueLine": [
+      {
+        "line": "Blue Line",
+        "lineTamil": "ப்ளூ லைன்",
+        "from": "Airport",
+        "fromTamil": "விமான நிலையம்",
+        "to": "Wimco Nagar Depot",
+        "toTamil": "விம்கோ நகர் டெப்போ",
+        "firstTrain": "04:51",
+        "lastTrain": "23:00",
+        "frequencies": [
+          { "time": "05:00-08:00, 11:00-17:00, 20:00-22:00", "interval": "7 min", "intervalTamil": "7 நிமிடங்கள்" },
+          { "time": "08:00-11:00, 17:00-20:00", "interval": "6 min", "intervalTamil": "6 நிமிடங்கள்" },
+          { "time": "22:00-23:00", "interval": "15 min", "intervalTamil": "15 நிமிடங்கள்" }
+        ],
+        "notes": ["3 min frequency between Washermenpet & Alandur during peak hours"],
+        "notesTamil": ["பீக் நேரங்களில் வாஷர்மேன் பெட் மற்றும் ஆலந்தூர் இடையே 3 நிமிட இடைவெளி"]
+      }
+    ],
+    "greenLine": [
+      {
+        "line": "Green Line",
+        "lineTamil": "கிரீன் லைன்",
+        "from": "Chennai Central",
+        "fromTamil": "சென்னை சென்ட்ரல்",
+        "to": "St. Thomas Mount",
+        "toTamil": "செயின்ட் தாமஸ் மவுண்ட்",
+        "firstTrain": "04:55",
+        "lastTrain": "23:17",
+        "frequencies": [
+          { "time": "05:00-08:00, 11:00-17:00, 20:00-22:00", "interval": "14 min", "intervalTamil": "14 நிமிடங்கள்" },
+          { "time": "08:00-11:00, 17:00-20:00", "interval": "12 min", "intervalTamil": "12 நிமிடங்கள்" },
+          { "time": "22:00-23:00", "interval": "30 min", "intervalTamil": "30 நிமிடங்கள்" }
+        ]
+      }
+    ],
+    "interCorridor": [
+      {
+        "line": "Inter-Corridor",
+        "lineTamil": "இணை வழித்தடம்",
+        "from": "Chennai Central",
+        "fromTamil": "சென்னை சென்ட்ரல்",
+        "to": "Airport",
+        "toTamil": "விமான நிலையம்",
+        "firstTrain": "05:02",
+        "lastTrain": "23:00",
+        "frequencies": [
+          { "time": "05:00-08:00, 11:00-17:00, 20:00-22:00", "interval": "14 min", "intervalTamil": "14 நிமிடங்கள்" },
+          { "time": "08:00-11:00, 17:00-20:00", "interval": "12 min", "intervalTamil": "12 நிமிடங்கள்" },
+          { "time": "22:00-23:00", "interval": "30 min", "intervalTamil": "30 நிமிடங்கள்" }
+        ]
+      }
+    ]
+  },
+  "saturday": {
+    "blueLine": [
+      {
+        "line": "Blue Line",
+        "lineTamil": "ப்ளூ லைன்",
+        "from": "Airport",
+        "fromTamil": "விமான நிலையம்",
+        "to": "Wimco Nagar Depot",
+        "toTamil": "விம்கோ நகர் டெப்போ",
+        "firstTrain": "04:51",
+        "lastTrain": "23:00",
+        "frequencies": [
+          { "time": "05:00-12:00, 20:00-22:00", "interval": "7 min", "intervalTamil": "7 நிமிடங்கள்" },
+          { "time": "12:00-20:00", "interval": "10 min", "intervalTamil": "10 நிமிடங்கள்" },
+          { "time": "22:00-23:00", "interval": "15 min", "intervalTamil": "15 நிமிடங்கள்" }
+        ]
+      }
+    ]
+  },
+  "sundayAndHolidays": {
+    "blueLine": [
+      {
+        "line": "Blue Line",
+        "lineTamil": "ப்ளூ லைன்",
+        "from": "Airport",
+        "fromTamil": "விமான நிலையம்",
+        "to": "Wimco Nagar Depot",
+        "toTamil": "விம்கோ நகர் டெப்போ",
+        "firstTrain": "04:51",
+        "lastTrain": "23:00",
+        "frequencies": [
+          { "time": "05:00-12:00, 20:00-22:00", "interval": "7 min", "intervalTamil": "7 நிமிடங்கள்" },
+          { "time": "12:00-20:00", "interval": "10 min", "intervalTamil": "10 நிமிடங்கள்" },
+          { "time": "22:00-23:00", "interval": "15 min", "intervalTamil": "15 நிமிடங்கள்" }
+        ]
+      }
+    ]
+  }
+}

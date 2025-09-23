@@ -5,7 +5,8 @@ import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
 import { MapPin, Star, Phone, Clock, Navigation } from 'lucide-react';
-import { useLocation, getLocationSpecificContent } from './LocationService';
+import { LanguageToggle } from './LanguageToggle';
+import { useLocation, getLocationSpecificContent } from '../services/LocationService';
 import servicesMarketplace from 'figma:asset/4108c802b3e078fed252c2b3f591ce76fb2675b2.png';
 
 interface LocalServicesProps {

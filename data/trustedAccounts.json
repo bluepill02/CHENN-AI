@@ -1,0 +1,7 @@
+{
+  "traffic": ["ChennaiTraffic", "tnpoliceoffcl"],
+  "civic": ["chennaicorp", "CMWSSBOfficial"],
+  "transport": ["MTCChennai", "cmrl_metro"],
+  "disaster": ["tnsdma", "Indiametdept"],
+  "community": ["UpdatesChennai", "ChennaiRains", "ChennaiWeather", "ChennaiCityNews", "ChennaiMetroFans"]
+}

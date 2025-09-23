@@ -7,10 +7,10 @@ import { AchievementBadges } from './AchievementBadges';
 import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from './LanguageService';
+import { useLanguage } from '../services/LanguageService';
 import { AppHealthCheck } from './AppHealthCheck';
 import DeploymentReadiness from './DeploymentReadiness';
-import { useLocation } from './LocationService';
+import { useLocation } from '../services/LocationService';
 import { 
   MapPin, 
   ChevronRight,

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Home, Store, MessageCircle, User } from 'lucide-react';
 import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
-import { useLanguage } from './LanguageService';
+import { useLanguage } from '../services/LanguageService';
 
 interface BottomNavProps {
   currentScreen: string;

@@ -4,7 +4,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { MapPin, Clock, Plus, CheckCircle, AlertCircle } from 'lucide-react';
-import { useLocation, LocationData } from './LocationService';
+import { useLocation, LocationData } from '../services/LocationService';
 
 export const LocationModal: React.FC = () => {
   const { 

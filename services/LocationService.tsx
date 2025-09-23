@@ -1,4 +1,68 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
+// Import Mappls validation function from ExternalDataService
+// Note: In a real app, you might want to create a separate MappslService
+// For now, we'll create a local validation function
+
+// Mappls API integration for accurate Chennai pincode validation
+const MAPPLS_API_KEY = 'hlgokcsmvrbirjotoxixwqscpwvlspinyupy';
+const MAPPLS_GEOCODE_URL = 'https://apis.mappls.com/advancedmaps/v1/geocode';
+
+interface MappslLocationResult {
+  lat: number;
+  lng: number;
+  area: string;
+  city: string;
+  district: string;
+  state: string;
+  pincode: string;
+  formatted_address: string;
+}
+
+// Validate Chennai pincode using Mappls API
+const validatePincodeWithMappls = async (pincode: string): Promise<MappslLocationResult | null> => {
+  try {
+    const response = await fetch(
+      `${MAPPLS_GEOCODE_URL}?address=${pincode} Chennai Tamil Nadu&key=${MAPPLS_API_KEY}`
+    );
+    
+    if (!response.ok) {
+      console.warn(`Mappls API error: ${response.status}, falling back to local data`);
+      return null;
+    }
+    
+    const data = await response.json();
+    const result = data.results?.[0];
+    
+    if (!result || !result.lat || !result.lng) {
+      return null;
+    }
+    
+    // Verify it's within Chennai area (rough bounds)
+    const isInChennai = (
+      result.lat >= 12.8 && result.lat <= 13.3 &&
+      result.lng >= 80.0 && result.lng <= 80.5
+    );
+    
+    if (!isInChennai) {
+      return null;
+    }
+    
+    return {
+      lat: result.lat,
+      lng: result.lng,
+      area: result.area || result.subLocality || result.locality || '',
+      city: result.city || 'Chennai',
+      district: result.district || 'Chennai',
+      state: result.state || 'Tamil Nadu',
+      pincode: pincode,
+      formatted_address: result.formatted_address || `${pincode}, Chennai`
+    };
+  } catch (error) {
+    console.warn('Error validating pincode with Mappls:', error);
+    return null;
+  }
+};
 
 // Types for location data
 export interface LocationData {
@@ -28,6 +92,91 @@ export interface LocationContextType {
   isLocationModalOpen: boolean;
   setLocationModalOpen: (open: boolean) => void;
 }
+
+// Load Chennai pincode data from our comprehensive pincode database
+const loadChennaiPincodeData = async (pincode: string): Promise<LocationData | null> => {
+  try {
+    // Import the comprehensive pincode stops data
+    const pincodeStopsData = await import('../data/pincodeStops.json');
+    const pincodeStops = pincodeStopsData.default as Record<string, {busStops: string[], twitterQueries: string[]}>;
+    
+    // Check if the pincode exists in our database
+    if (!pincodeStops[pincode]) {
+      return null;
+    }
+    
+    // Get the area name from the first stop/landmark
+    const stops = pincodeStops[pincode].busStops;
+    const primaryArea = Array.isArray(stops) && stops.length > 0 ? stops[0] : 'Chennai Area';
+    
+    // Create a comprehensive area name mapping for better user experience
+    const areaNameMap: Record<string, string> = {
+      'Parry\'s Corner Bus Stand': 'George Town',
+      'Chintadripet': 'Anna Salai',
+      'Chennai Central Station': 'Central Chennai',
+      'Mylapore Tank Bus Stop': 'Mylapore',
+      'Chepauk': 'Chepauk',
+      'Thousand Lights': 'Anna Nagar',
+      'Vepery Police Station': 'Vepery',
+      'Egmore Bus Stand': 'Egmore',
+      'Fort St. George': 'Fort',
+      'T. Nagar Bus Stand': 'T. Nagar',
+      'Adyar Depot': 'Adyar',
+      'Washermanpet': 'Washermanpet',
+      'Royapettah': 'Royapettah',
+      'Nungambakkam': 'Nungambakkam',
+      'Anna Nagar': 'Anna Nagar',
+      'Vadapalani': 'Vadapalani',
+      'Kodambakkam': 'Kodambakkam',
+      'Saidapet': 'Saidapet',
+      'Tambaram Sanatorium': 'Tambaram',
+      'Tambaram': 'Tambaram',
+      'Mandaveli': 'Mylapore',
+      'R.A. Puram': 'R.A. Puram',
+      'Santhome': 'Mylapore',
+      'Madhavaram': 'Madhavaram',
+      'Besant Nagar': 'Besant Nagar',
+      'Sholinganallur': 'Sholinganallur',
+      'Velachery': 'Velachery',
+      'Pallavaram': 'Pallavaram',
+      'Chromepet': 'Chromepet'
+    };
+    
+    // Get a cleaner area name
+    const cleanAreaName = areaNameMap[primaryArea] || primaryArea || 'Chennai Area';
+    
+    // Generate approximate coordinates based on pincode (Chennai area bounds)
+    const getCoordinatesForPincode = (pin: string): { lat: number; lng: number } => {
+      const baseCode = parseInt(pin.substring(3));
+      // Chennai coordinates roughly span from 12.8 to 13.3 lat, 80.0 to 80.5 lng
+      const lat = 12.8 + (baseCode % 100) * 0.005;  // Distribute across Chennai
+      const lng = 80.0 + (baseCode % 50) * 0.01;     // Distribute across Chennai
+      return { lat, lng };
+    };
+    
+    const coords = getCoordinatesForPincode(pincode);
+    
+    return {
+      pincode: pincode,
+      area: cleanAreaName,
+      district: 'Chennai',
+      state: 'Tamil Nadu',
+      latitude: coords.lat,
+      longitude: coords.lng,
+      verified: true,
+      timestamp: Date.now(),
+      localContent: {
+        communityName: `${cleanAreaName} Community`,
+        localLanguage: 'Tamil',
+        culturalElements: ['Local Temple', 'Community Center'],
+        nearbyLandmarks: stops.slice(0, 3) // Use first 3 stops as landmarks
+      }
+    };
+  } catch (error) {
+    console.error('Error loading Chennai pincode data:', error);
+    return null;
+  }
+};
 
 // Mock location database - in real implementation, this would be an API call
 const mockLocationDatabase: Record<string, Omit<LocationData, 'verified' | 'timestamp'>> = {
@@ -170,18 +319,71 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsVerifying(true);
     
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // First, try to validate with Mappls API for accurate Chennai data
+      const mappslResult = await validatePincodeWithMappls(pincode);
       
-      // In real implementation, this would be an API call to verify pincode
-      // and potentially use geolocation API to cross-verify
+      if (mappslResult) {
+        // Successfully validated with Mappls - create location data
+        const locationData: LocationData = {
+          pincode: mappslResult.pincode,
+          area: mappslResult.area || 'Chennai Area',
+          district: mappslResult.district,
+          state: mappslResult.state,
+          latitude: mappslResult.lat,
+          longitude: mappslResult.lng,
+          verified: true,
+          timestamp: Date.now(),
+          localContent: {
+            communityName: `${mappslResult.area} Neighborhood`,
+            localLanguage: 'Tamil',
+            culturalElements: ['Local Temple', 'Community Center'],
+            nearbyLandmarks: [mappslResult.formatted_address]
+          }
+        };
+        
+        return locationData;
+      }
+      
+      // Second fallback: Try our comprehensive Chennai pincode database
+      const chennaiPincodeData = await loadChennaiPincodeData(pincode);
+      
+      if (chennaiPincodeData) {
+        return chennaiPincodeData;
+      }
+      
+      // Third fallback: Check basic Chennai pincode format (600xxx)
+      if (pincode.startsWith('600') && pincode.length === 6) {
+        // Even if not in our database, if it's a 600xxx pincode, assume it's Chennai
+        const locationData: LocationData = {
+          pincode: pincode,
+          area: 'Chennai Area',
+          district: 'Chennai',
+          state: 'Tamil Nadu',
+          latitude: 13.0827,  // Chennai center coordinates
+          longitude: 80.2707,
+          verified: true,
+          timestamp: Date.now(),
+          localContent: {
+            communityName: 'Chennai Community',
+            localLanguage: 'Tamil',
+            culturalElements: ['Local Temple', 'Community Center'],
+            nearbyLandmarks: ['Chennai landmarks']
+          }
+        };
+        
+        return locationData;
+      }
+
+      // Final fallback to mock database for legacy support
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const locationInfo = mockLocationDatabase[pincode];
       
       if (!locationInfo) {
-        throw new Error('Pincode not found or not supported in Chennai area');
+        throw new Error('Pincode not found or not supported in Chennai area. Please ensure you enter a valid Chennai pincode (600xxx).');
       }
 
-      // Simulate location verification (in real app, would use GPS/network location)
+      // Create location data from local database
       const locationData: LocationData = {
         ...locationInfo,
         verified: true,
