@@ -1,0 +1,77 @@
+// Mock data for Auto Share feature
+import { Ride, User } from "./autoShareInterfaces";
+
+const mockUsers: User[] = [
+  { id: "u1", name: "Arun Kumar", avatarUrl: "https://example.com/avatar1.png" },
+  { id: "u2", name: "Priya Sharma" },
+  { id: "u3", name: "Vikram Raj", avatarUrl: "https://example.com/avatar3.png" },
+];
+
+export const mockRides: Ride[] = [
+  {
+    id: "r1",
+    pickup: "Central Station / சென்ட்ரல் ஸ்டேஷன்",
+    drop: "T Nagar / டி நகர்",
+    time: "2025-09-24T08:30:00Z",
+    fare: 150,
+    seatsTotal: 4,
+    seatsAvailable: 2,
+    creator: mockUsers[0],
+    status: "upcoming",
+  },
+  {
+    id: "r2",
+    pickup: "Velachery / வேளச்சேரி",
+    drop: "Guindy / கிண்டி",
+    time: "2025-09-23T18:00:00Z",
+    fare: 100,
+    seatsTotal: 3,
+    seatsAvailable: 0,
+    creator: mockUsers[1],
+    status: "completed",
+  },
+  {
+    id: "r3",
+    pickup: "Adyar / அடையார்",
+    drop: "OMR / ஓஎம்ஆர்",
+    time: "2025-09-22T09:00:00Z",
+    fare: 200,
+    seatsTotal: 4,
+    seatsAvailable: 1,
+    creator: mockUsers[2],
+    status: "cancelled",
+  },
+  {
+    id: "r4",
+    pickup: "Tambaram / தாம்பரம்",
+    drop: "Chromepet / குரோம்பேட்டை",
+    time: "2025-09-21T07:45:00Z",
+    fare: 50,
+    seatsTotal: 2,
+    seatsAvailable: 0,
+    creator: mockUsers[0],
+    status: "no-show",
+  },
+  {
+    id: "r5",
+    pickup: "Anna Nagar / அண்ணா நகர்",
+    drop: "Perambur / பெரம்பூர்",
+    time: "2025-09-25T10:15:00Z",
+    fare: 120,
+    seatsTotal: 3,
+    seatsAvailable: 3,
+    creator: mockUsers[1],
+    status: "upcoming",
+  },
+  {
+    id: "r6",
+    pickup: "Mylapore / மயிலாப்பூர்",
+    drop: "Saidapet / சைதாப்பேட்டை",
+    time: "2025-09-20T16:30:00Z",
+    fare: 80,
+    seatsTotal: 2,
+    seatsAvailable: 1,
+    creator: mockUsers[2],
+    status: "completed",
+  },
+];

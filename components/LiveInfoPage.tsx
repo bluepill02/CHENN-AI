@@ -22,7 +22,7 @@ import { ArrowLeft, RefreshCw, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { useLanguage } from '../services/LanguageService';
 import BusByPincodeCard from './BusByPincodeCard';
-import { LiveAlertsPanel } from './LiveData/LiveAlertsPanel';
+import { LiveAlertsPage } from './LiveAlertsPage';
 import { TrafficStatusPanel } from './LiveData/TrafficStatusPanel';
 import { WeatherPanel } from './LiveData/WeatherPanel';
 import TimetableCard from './TimetableCard';
@@ -151,7 +151,7 @@ export function LiveInfoPage({
           <>
             {/* Live Alerts Section */}
             <Card className="p-6">
-              <LiveAlertsPanel userLocation={locationData} />
+              <LiveAlertsPage />
             </Card>
 
             {/* Weather & Traffic Row */}

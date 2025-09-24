@@ -1,10 +1,10 @@
 import communityScenes from 'figma:asset/39dd468cce8081c14f345796484cc8b182dc6bb6.png';
 import { Heart, MapPin, MessageCircle, Navigation, Share2, Shield, Star, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import rickshawVideo from '../assets/Rickshaw.webm';
 import { useLanguage } from '../services/LanguageService';
 import { getLocationAwarePosts, getLocationSpecificContent, useLocation } from '../services/LocationService';
-import AutoShareCard from './AutoShareCard';
 import { ChennaiPride } from './ChennaiPride';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
@@ -17,10 +17,10 @@ import { Card } from './ui/card';
 
 interface CommunityFeedProps {
   userLocation?: any;
-  pincode?: string;
 }
 
-export function CommunityFeed({ userLocation, pincode }: CommunityFeedProps) {
+export function CommunityFeed({ userLocation }: CommunityFeedProps) {
+  const navigate = useNavigate();
   const [showChennaiPride, setShowChennaiPride] = useState(false);
   const [showLiveInfo, setShowLiveInfo] = useState(false);
   const { currentLocation, setLocationModalOpen } = useLocation();
@@ -220,7 +220,9 @@ export function CommunityFeed({ userLocation, pincode }: CommunityFeedProps) {
       {/* Chennai Quick Actions */}
       <div className="px-6 py-4">
         <div className="grid grid-cols-4 gap-3 mb-4">
-          <Button variant="outline" className="flex-col h-auto py-3 border-orange-200 hover:bg-orange-50">
+          <Button variant="outline" className="flex-col h-auto py-3 border-orange-200 hover:bg-orange-50"
+            onClick={() => navigate('/auto-share')}
+          >
             <div className="mb-1">
               <video 
                 src={rickshawVideo}
@@ -261,13 +263,6 @@ export function CommunityFeed({ userLocation, pincode }: CommunityFeedProps) {
         {showChennaiPride && (
           <div className="mb-4">
             <ChennaiPride />
-          </div>
-        )}
-        
-        {/* Auto Share Card */}
-        {pincode && (
-          <div className="px-6 mb-4">
-            <AutoShareCard pincode={pincode} />
           </div>
         )}
         

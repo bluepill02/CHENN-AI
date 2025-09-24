@@ -1,4 +1,10 @@
 import { useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AutoShareCreatePage from './components/AutoShareCreatePage';
+import AutoShareDetailPage from './components/AutoShareDetailPage';
+import AutoShareHistoryPage from './components/AutoShareHistoryPage';
+import AutoShareMyRidesPage from './components/AutoShareMyRidesPage';
+import AutoSharePage from './components/AutoSharePage';
 import ErrorBoundary from './components/ErrorBoundary';
 import { MainApp } from './components/MainApp';
 import { PincodeVerification } from './components/PincodeVerification';
@@ -29,22 +35,31 @@ export default function App() {
       <LanguageProvider>
         <LocationProvider>
           <PincodeContextProvider>
-            <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-25 relative overflow-hidden">
-            <div className="relative z-10">
-              {currentScreen === 'welcome' && (
-                <WelcomeScreen onContinue={handleWelcomeContinue} />
-              )}
-              {currentScreen === 'pincode' && (
-                <PincodeVerification 
-                  onVerificationComplete={handlePincodeVerification}
-                  onSkip={handlePincodeSkip}
-                />
-              )}
-              {currentScreen === 'main' && (
-                <MainApp userLocation={userLocationData} />
-              )}
-            </div>
-          </div>
+            <Router>
+              <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-25 relative overflow-hidden">
+                <div className="relative z-10">
+                  {currentScreen === 'welcome' && (
+                    <WelcomeScreen onContinue={handleWelcomeContinue} />
+                  )}
+                  {currentScreen === 'pincode' && (
+                    <PincodeVerification 
+                      onVerificationComplete={handlePincodeVerification}
+                      onSkip={handlePincodeSkip}
+                    />
+                  )}
+                  {currentScreen === 'main' && (
+                    <MainApp userLocation={userLocationData} />
+                  )}
+                </div>
+              </div>
+              <Routes>
+                <Route path="/auto-share" element={<AutoSharePage />} />
+                <Route path="/auto-share/:id" element={<AutoShareDetailPage />} />
+                <Route path="/auto-share/create" element={<AutoShareCreatePage />} />
+                <Route path="/auto-share/my" element={<AutoShareMyRidesPage />} />
+                <Route path="/auto-share/history" element={<AutoShareHistoryPage />} />
+              </Routes>
+            </Router>
           </PincodeContextProvider>
         </LocationProvider>
       </LanguageProvider>

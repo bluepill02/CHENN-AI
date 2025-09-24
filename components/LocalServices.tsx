@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useLocation } from '../services/LocationService';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
-import { LiveAlertsPage } from './LiveAlertsPage';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
@@ -20,35 +19,7 @@ export function LocalServices({ userLocation }: LocalServicesProps) {
   // Use location from context if available, otherwise use prop
   const activeLocation = currentLocation || userLocation;
 
-  // Handle navigation to Live Alerts
-  if (currentView === 'alerts') {
-    return (
-      <div className="relative">
-        <div className="absolute top-4 left-4 z-10">
-          <Button 
-            onClick={() => setCurrentView('services')}
-            variant="outline"
-            size="sm"
-            className="bg-white/90 backdrop-blur-sm"
-          >
-            ← Back to Services
-          </Button>
-        </div>
-        <LiveAlertsPage userLocation={activeLocation} />
-      </div>
-    );
-  }
   const serviceCategories = [
-    {
-      iconSrc: ChennaiIcons.auto,
-      iconEmoji: '⚠️',
-      name: 'நேரடி எச்சரிக்கைகள் • Live Alerts',
-      color: 'from-red-400 to-orange-500',
-      count: 'Real-time',
-      description: 'Location-based alerts',
-      action: () => setCurrentView('alerts'),
-      isSpecial: true
-    },
     {
       iconSrc: ChennaiIcons.food,
       iconEmoji: '🍽️',
@@ -56,14 +27,6 @@ export function LocalServices({ userLocation }: LocalServicesProps) {
       color: 'from-orange-400 to-red-500',
       count: '127 அருகில்',
       description: 'Authentic தமிழ் food'
-    },
-    {
-      iconSrc: ChennaiIcons.auto,
-      iconEmoji: '🛺',
-      name: 'Auto/Share • போக்குவரத்து',
-      color: 'from-green-400 to-teal-500',
-      count: '45 drivers',
-      description: 'Trusted local drivers'
     },
     {
       iconSrc: ChennaiIcons.shop,
