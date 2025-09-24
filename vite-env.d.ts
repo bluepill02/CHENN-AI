@@ -1,3 +1,15 @@
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_WEATHER_API_KEY: string;
+  readonly VITE_MAPPLS_API_KEY: string;
+  // Add other environment variables here as needed
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 declare module '*.png' {
   const content: string;
   export default content;

@@ -1,7 +1,6 @@
 import { ChevronDown, ChevronUp, MapPin, Zap } from 'lucide-react';
 import { useState } from 'react';
 import { Card } from '../ui/card';
-import { LiveAlertsPanel } from './LiveAlertsPanel';
 import { TrafficStatusPanel } from './TrafficStatusPanel';
 import { WeatherPanel } from './WeatherPanel';
 
@@ -64,9 +63,8 @@ export function LocationAwareLiveData({
           className="transition-all duration-300 mt-3 space-y-4 max-h-[28rem] overflow-y-auto"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
-          <WeatherPanel userLocation={userLocation} />
+          <WeatherPanel />
           <TrafficStatusPanel userLocation={userLocation} />
-          <LiveAlertsPanel userLocation={userLocation} />
         </div>
       )}
     </Card>

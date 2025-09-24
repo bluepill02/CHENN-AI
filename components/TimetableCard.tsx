@@ -1,8 +1,8 @@
-import { getConnectionStatusColor } from "@/utils/getConnectionStatusColor";
 import { Clock } from "lucide-react"; // or your icon set
 import { useEffect, useState } from "react";
-import { Badge } from "./ui/Badge"; // adjust import path to your Badge component
-import { Card } from "./ui/Card"; // adjust import path to your Card component
+import { getConnectionStatusColor } from "../utils/statusColors";
+import { Badge } from "./ui/badge"; // adjust import path to your Badge component
+import { Card } from "./ui/card"; // adjust import path to your Card component
 
 interface Frequency {
   time: string;

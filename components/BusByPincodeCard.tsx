@@ -1,67 +1,104 @@
-import { Bus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Badge } from "./ui/badge";
-import { Card } from "./ui/card";
+import { Bus } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { usePincodeContext } from '../services/PincodeContext';
+import { Card } from './ui/card';
 
-export default function BusByPincodeCard({ pincode, language }: { pincode: string, language: "en" | "ta" }) {
-  const [data, setData] = useState<any>(null);
+interface BusByPincodeProps {
+  pincode?: string; // Optional - will use context if not provided
+}
+
+interface PincodeApiResponse {
+  pincode: string;
+  stops: string[];
+  twitterQueries: string[];
+}
+
+export const BusByPincodeCard: React.FC<BusByPincodeProps> = ({ pincode: propPincode }) => {
+  const { currentPincode } = usePincodeContext();
+  const pincode = propPincode || currentPincode;
+  const [busData, setBusData] = useState<PincodeApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`/api/busByPincode?pincode=${pincode}`)
-      .then(res => res.json())
-      .then(setData);
+    const fetchBusData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/busByPincode?pincode=${pincode}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch bus data');
+        }
+        const data = await response.json();
+        setBusData(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (pincode) {
+      fetchBusData();
+    }
   }, [pincode]);
 
-  if (!data) return null;
-return (
-  <div>
-    <h4 className="font-medium flex items-center gap-2 mb-2">
-      <Bus className="w-4 h-4" />
-      {language === "ta" ? "பேருந்து தகவல்" : "Bus Info"}
-      <Badge className="ml-auto">{pincode}</Badge>
-    </h4>
-    <Card className="p-3 border border-green-200">
-      {/* List of stops for this pincode */}
-      <ul className="space-y-1">
-        {data.stops.map((stop: string, i: number) => (
-          <li key={i}>{stop}</li>
-        ))}
-      </ul>
+  if (loading) {
+    return (
+      <Card className="p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Bus className="h-4 w-4" />
+          <h3 className="text-sm font-medium">Bus Stops</h3>
+        </div>
+        <p className="text-sm text-gray-600">Loading bus data...</p>
+      </Card>
+    );
+  }
 
-      {/* Loop through all routes */}
-      {data.routes && data.routes.length > 0 ? (
-        <div className="mt-4 space-y-4">
-          {data.routes.map((route: any, idx: number) => (
-            <div key={idx} className="border-b pb-2 last:border-0">
-              <div className="font-medium">
-                {route.route}:{" "}
-                {language === "ta" ? route.fromTamil || route.from : route.from} →{" "}
-                {language === "ta" ? route.toTamil || route.to : route.to}
-              </div>
-              <ul className="text-sm text-gray-600 mt-2 grid grid-cols-3 gap-2">
-                {route.timings.slice(0, 9).map((t: string, i: number) => (
-                  <li key={i}>{t}</li>
-                ))}
-              </ul>
+  if (error || !busData) {
+    return (
+      <Card className="p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Bus className="h-4 w-4" />
+          <h3 className="text-sm font-medium">Bus Stops</h3>
+        </div>
+        <p className="text-sm text-gray-600">
+          {error || 'No bus data available for this area'}
+        </p>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <Bus className="h-4 w-4" />
+        <h3 className="text-sm font-medium">Bus Stops (Pincode {pincode})</h3>
+      </div>
+      
+      <div className="space-y-2">
+        {busData.stops.slice(0, 4).map((stop, index) => (
+          <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+            <div className="font-medium text-sm text-gray-900 dark:text-gray-100">
+              {stop}
             </div>
-          ))}
-        </div>
-      ) : (
-        <div className="text-sm text-gray-600 mt-2">
-          {language === "ta"
-            ? "இந்த பின்கோடுக்கு பேருந்து இல்லை"
-            : "No bus timings available for this pincode"}
-        </div>
-      )}
-
-      <div className="mt-3 text-xs text-yellow-700 bg-yellow-50 border border-yellow-200 p-2 rounded">
-        ⚠️ {language === "ta"
-          ? "அட்டவணை எம்டிசி அதிகாரப்பூர்வ தளத்திலிருந்து பெறப்பட்டது. சேவைகள் மாறக்கூடும்."
-          : "Timings are fetched from MTC’s official site. Actual services may vary."}
+          </div>
+        ))}
+        
+        {busData.stops.length > 4 && (
+          <div className="text-xs text-gray-500 mt-2 text-center">
+            Showing 4 of {busData.stops.length} bus stops
+          </div>
+        )}
+      </div>
+      
+      <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+        <p className="text-xs text-gray-500">
+          Data from MTC official records. Services may vary.
+        </p>
       </div>
     </Card>
-  </div>
-);
+  );
+};
 
-// API handler code removed. Please see /pages/api/busByPincode.ts for the API implementation.
-}
+export default BusByPincodeCard;

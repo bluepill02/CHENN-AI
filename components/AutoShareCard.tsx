@@ -1,5 +1,14 @@
+/**
+ * AutoShareCard Component
+ * 
+ * Displays auto-rickshaw ride sharing opportunities for a specific pincode area.
+ * The WebM video animation is now displayed in the small Auto Share button 
+ * at the top of the community feed, not in this main card component.
+ * 
+ * @param pincode - The pincode area to filter rides for
+ */
+
 import { useEffect, useState } from "react";
-import rickshawVideo from "../assets/Rickshaw.webm";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 
@@ -20,7 +29,6 @@ export default function AutoShareCard({ pincode }: { pincode: string }) {
   const [posts, setPosts] = useState<AutoSharePost[]>([]);
   const [loading, setLoading] = useState(true);
   const [formOpen, setFormOpen] = useState(false);
-  const [videoError, setVideoError] = useState<string | null>(null);
 
   // Load posts from localStorage
   const loadPosts = () => {
@@ -112,21 +120,6 @@ export default function AutoShareCard({ pincode }: { pincode: string }) {
   return (
     <Card className="p-3 border border-green-200">
       <h4 className="font-medium mb-2">🚖 Auto Share ({pincode})</h4>
-      
-      <video 
-        src={rickshawVideo} 
-        autoPlay
-        muted
-        loop
-        playsInline
-        onError={() => {/* Optionally handle video load error here */}}
-        onLoadedData={() => setVideoError(null)}
-      >
-        <p>Your browser does not support the video tag or the video failed to load.</p>
-      </video>
-      {videoError && (
-        <div className="text-xs text-red-500 mb-2">{videoError}</div>
-      )}
       
       {loading && <div>Loading rides…</div>}
 

@@ -122,13 +122,13 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
     services: 'loading' as 'connected' | 'error' | 'loading'
   });
 
-  // WeatherAPI configuration for real Chennai weather data
+  // OpenWeatherMap API configuration for real Chennai weather data
   // Using environment variable for API key security
   const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
-  const WEATHER_API_URL = 'https://api.weatherapi.com/v1/current.json';
-  const CHENNAI_QUERY = 'Chennai';
+  const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+  const CHENNAI_QUERY = 'Chennai,IN';
 
-  // Check if WeatherAPI is available
+  // Check if OpenWeatherMap API is available
   const checkWeatherAPIHealth = async (): Promise<boolean> => {
     try {
       if (!WEATHER_API_KEY) {
@@ -136,7 +136,7 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
         return false;
       }
       const response = await fetch(
-        `${WEATHER_API_URL}?key=${WEATHER_API_KEY}&q=${CHENNAI_QUERY}&aqi=yes`,
+        `${WEATHER_API_URL}?q=${CHENNAI_QUERY}&units=metric&appid=${WEATHER_API_KEY}`,
         { method: 'HEAD' }
       );
       return response.ok;
@@ -145,7 +145,7 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
     }
   };
 
-  // Fetch real weather data from WeatherAPI
+  // Fetch real weather data from OpenWeatherMap API
   const fetchWeatherData = async (): Promise<WeatherData> => {
     try {
       if (!WEATHER_API_KEY) {
@@ -153,7 +153,7 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
       }
 
       const response = await fetch(
-        `${WEATHER_API_URL}?key=${WEATHER_API_KEY}&q=${CHENNAI_QUERY}&aqi=yes`
+        `${WEATHER_API_URL}?q=${CHENNAI_QUERY}&units=metric&appid=${WEATHER_API_KEY}`
       );
       
       if (!response.ok) {
@@ -161,20 +161,32 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
       }
       
       const data = await response.json();
-      const current = data.current;
-      const condition = current.condition;
+      const current = data.main;
+      const weather = data.weather[0];
       
-      // Map WeatherAPI condition to our condition types
-      const mapCondition = (text: string): 'sunny' | 'cloudy' | 'rainy' | 'partly_cloudy' => {
-        const lowerText = text.toLowerCase();
-        if (lowerText.includes('rain') || lowerText.includes('drizzle') || lowerText.includes('shower')) {
-          return 'rainy';
-        } else if (lowerText.includes('cloud') && !lowerText.includes('partly')) {
-          return 'cloudy';
-        } else if (lowerText.includes('clear') || lowerText.includes('sunny')) {
-          return 'sunny';
-        } else {
-          return 'partly_cloudy';
+      // Map OpenWeatherMap condition to our condition types
+      const mapCondition = (main: string): 'sunny' | 'cloudy' | 'rainy' | 'partly_cloudy' => {
+        switch (main.toLowerCase()) {
+          case 'rain':
+          case 'drizzle':
+          case 'thunderstorm':
+            return 'rainy';
+          case 'clouds':
+            return 'cloudy';
+          case 'clear':
+            return 'sunny';
+          case 'mist':
+          case 'smoke':
+          case 'haze':
+          case 'dust':
+          case 'fog':
+          case 'sand':
+          case 'ash':
+          case 'squall':
+          case 'tornado':
+            return 'partly_cloudy';
+          default:
+            return 'sunny';
         }
       };
 
@@ -222,36 +234,19 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
         return descriptions[desc.toLowerCase()] || desc;
       };
 
-      // Map air quality from WeatherAPI
-      const mapAirQuality = (aqi: number): 'good' | 'moderate' | 'poor' => {
-        if (aqi <= 3) return 'good';
-        if (aqi <= 6) return 'moderate';
-        return 'poor';
-      };
-
-      const mapAirQualityTamil = (quality: string): string => {
-        switch (quality) {
-          case 'good': return 'நல்லது';
-          case 'moderate': return 'நடுத்தர';
-          case 'poor': return 'மோசம்';
-          default: return 'நடுத்தர';
-        }
-      };
-
-      const mappedCondition = mapCondition(condition.text);
-      const airQuality = mapAirQuality(current.air_quality?.['us-epa-index'] || 3);
+      const mappedCondition = mapCondition(weather.main);
       
       return {
-        temperature: Math.round(current.temp_c),
+        temperature: Math.round(current.temp),
         condition: mappedCondition,
         conditionTamil: mapConditionTamil(mappedCondition),
-        description: condition.text,
-        descriptionTamil: mapDescriptionTamil(condition.text),
+        description: weather.description,
+        descriptionTamil: mapDescriptionTamil(weather.description),
         humidity: current.humidity,
-        windSpeed: Math.round(current.wind_kph),
-        uvIndex: Math.round(current.uv || 5),
-        airQuality,
-        airQualityTamil: mapAirQualityTamil(airQuality),
+        windSpeed: Math.round((data.wind?.speed || 0) * 3.6), // Convert m/s to km/h
+        uvIndex: undefined, // OpenWeatherMap free tier doesn't include UV index
+        airQuality: 'moderate', // Default value, would need separate API call
+        airQualityTamil: 'மிதமான',
         lastUpdated: new Date()
       };
     } catch (error) {
@@ -270,65 +265,6 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
         airQuality: 'moderate' as const,
         airQualityTamil: 'மிதமான',
         lastUpdated: new Date()
-      };
-    }
-  };
-
-  // Fetch traffic data from Mappls Traffic API
-  const fetchTrafficData = async (lat: number, lng: number, zoom: number = 12): Promise<{ congestionLevel: string, raw: any, lastUpdate: Date } | { error: true, message: string }> => {
-    try {
-      const MAPPLS_API_KEY = import.meta.env.VITE_MAPPLS_API_KEY;
-      
-      if (!MAPPLS_API_KEY) {
-        throw new Error('Mappls API key not configured');
-      }
-
-      const response = await fetch(
-        `https://apis.mappls.com/advancedmaps/v1/${MAPPLS_API_KEY}/traffic?center=${lat},${lng}&zoom=${zoom}`,
-        {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          }
-        }
-      );
-      
-      if (!response.ok) {
-        throw new Error(`Mappls Traffic API error: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      
-      // Normalize the response
-      let congestionLevel = 'unknown';
-      
-      // Extract congestion level from Mappls response
-      // Note: This is a simplified mapping - actual Mappls API response structure may vary
-      if (data.traffic && data.traffic.congestion) {
-        const congestion = data.traffic.congestion;
-        if (congestion < 0.3) congestionLevel = 'low';
-        else if (congestion < 0.6) congestionLevel = 'medium';
-        else if (congestion < 0.8) congestionLevel = 'high';
-        else congestionLevel = 'severe';
-      } else if (data.data && Array.isArray(data.data)) {
-        // Alternative: analyze traffic incidents or flow data
-        const incidents = data.data.length;
-        if (incidents === 0) congestionLevel = 'low';
-        else if (incidents < 3) congestionLevel = 'medium';
-        else if (incidents < 6) congestionLevel = 'high';
-        else congestionLevel = 'severe';
-      }
-
-      return {
-        congestionLevel,
-        raw: data,
-        lastUpdate: new Date()
-      };
-    } catch (error) {
-      console.error('Traffic data fetch error:', error);
-      return {
-        error: true,
-        message: error instanceof Error ? error.message : 'Failed to fetch traffic data'
       };
     }
   };
@@ -428,7 +364,7 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
     setIsLoading(true);
     
     try {
-      // Fetch real weather data from WeatherAPI
+      // Fetch real weather data from OpenWeatherMap API
       setApiStatus(prev => ({ ...prev, weather: 'loading' }));
       
       try {

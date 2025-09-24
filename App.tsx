@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { WelcomeScreen } from './components/WelcomeScreen';
-import { PincodeVerification } from './components/PincodeVerification';
-import { MainApp } from './components/MainApp';
-import { LocationProvider } from './services/LocationService';
-import { LanguageProvider } from './services/LanguageService';
+import { useState } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
-import { ImageWithFallback } from './components/figma/ImageWithFallback';
+import { MainApp } from './components/MainApp';
+import { PincodeVerification } from './components/PincodeVerification';
+import { WelcomeScreen } from './components/WelcomeScreen';
+import { LanguageProvider } from './services/LanguageService';
+import { LocationProvider } from './services/LocationService';
+import { PincodeContextProvider } from './services/PincodeContext';
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState<'welcome' | 'pincode' | 'main'>('welcome');
@@ -28,7 +28,8 @@ export default function App() {
     <ErrorBoundary>
       <LanguageProvider>
         <LocationProvider>
-          <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-25 relative overflow-hidden">
+          <PincodeContextProvider>
+            <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-25 relative overflow-hidden">
             <div className="relative z-10">
               {currentScreen === 'welcome' && (
                 <WelcomeScreen onContinue={handleWelcomeContinue} />
@@ -44,6 +45,7 @@ export default function App() {
               )}
             </div>
           </div>
+          </PincodeContextProvider>
         </LocationProvider>
       </LanguageProvider>
     </ErrorBoundary>

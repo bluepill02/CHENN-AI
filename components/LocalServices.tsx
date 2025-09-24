@@ -1,13 +1,13 @@
-import React from 'react';
-import { Card } from './ui/card';
+import servicesMarketplace from 'figma:asset/4108c802b3e078fed252c2b3f591ce76fb2675b2.png';
+import { AlertTriangle, Clock, MapPin, Navigation, Phone, Star } from 'lucide-react';
+import { useState } from 'react';
+import { useLocation } from '../services/LocationService';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
+import { LiveAlertsPage } from './LiveAlertsPage';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
-import { MapPin, Star, Phone, Clock, Navigation } from 'lucide-react';
-import { LanguageToggle } from './LanguageToggle';
-import { useLocation, getLocationSpecificContent } from '../services/LocationService';
-import servicesMarketplace from 'figma:asset/4108c802b3e078fed252c2b3f591ce76fb2675b2.png';
+import { Card } from './ui/card';
 
 interface LocalServicesProps {
   userLocation?: any;
@@ -15,11 +15,40 @@ interface LocalServicesProps {
 
 export function LocalServices({ userLocation }: LocalServicesProps) {
   const { currentLocation, setLocationModalOpen } = useLocation();
+  const [currentView, setCurrentView] = useState<'services' | 'alerts'>('services');
   
   // Use location from context if available, otherwise use prop
   const activeLocation = currentLocation || userLocation;
-  const locationContent = getLocationSpecificContent(activeLocation);
+
+  // Handle navigation to Live Alerts
+  if (currentView === 'alerts') {
+    return (
+      <div className="relative">
+        <div className="absolute top-4 left-4 z-10">
+          <Button 
+            onClick={() => setCurrentView('services')}
+            variant="outline"
+            size="sm"
+            className="bg-white/90 backdrop-blur-sm"
+          >
+            ← Back to Services
+          </Button>
+        </div>
+        <LiveAlertsPage userLocation={activeLocation} />
+      </div>
+    );
+  }
   const serviceCategories = [
+    {
+      iconSrc: ChennaiIcons.auto,
+      iconEmoji: '⚠️',
+      name: 'நேரடி எச்சரிக்கைகள் • Live Alerts',
+      color: 'from-red-400 to-orange-500',
+      count: 'Real-time',
+      description: 'Location-based alerts',
+      action: () => setCurrentView('alerts'),
+      isSpecial: true
+    },
     {
       iconSrc: ChennaiIcons.food,
       iconEmoji: '🍽️',
@@ -195,7 +224,13 @@ export function LocalServices({ userLocation }: LocalServicesProps) {
         <h2 className="mb-4">Categories</h2>
         <div className="grid grid-cols-2 gap-4">
           {serviceCategories.map((category, index) => (
-            <Card key={index} className="p-4 bg-card backdrop-blur-sm border-orange-200 hover:shadow-lg transition-all cursor-pointer hover:scale-105 shadow-orange-100/50">
+            <Card 
+              key={index} 
+              className={`p-4 bg-card backdrop-blur-sm hover:shadow-lg transition-all cursor-pointer hover:scale-105 ${
+                category.isSpecial ? 'border-red-300 shadow-red-100/50' : 'border-orange-200 shadow-orange-100/50'
+              }`}
+              onClick={category.action || undefined}
+            >
               <div className="flex items-center justify-center mb-3">
                 <IllustratedIcon 
                   src={category.iconSrc}
@@ -208,6 +243,14 @@ export function LocalServices({ userLocation }: LocalServicesProps) {
               <h3 className="text-sm font-medium mb-1">{category.name}</h3>
               <p className="text-xs text-gray-500 mb-1">{category.count}</p>
               <p className="text-xs text-gray-400">{category.description}</p>
+              {category.isSpecial && (
+                <div className="mt-2">
+                  <Badge className="bg-red-100 text-red-700 border-red-200 text-xs">
+                    <AlertTriangle className="w-3 h-3 mr-1" />
+                    New
+                  </Badge>
+                </div>
+              )}
             </Card>
           ))}
         </div>

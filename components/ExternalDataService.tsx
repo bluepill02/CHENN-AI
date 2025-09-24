@@ -1,7 +1,6 @@
 // DEPRECATED: This file has been moved to /services/ExternalDataService.tsx
-// This is a small backward-compatibility shim. Prefer importing directly:
-// import { ExternalDataProvider, useExternalData } from '../services/ExternalDataService';
+// This is a backward compatibility shim. Please update imports to use:
+// import { ... } from '../services/ExternalDataService';
 
-// Re-export only the provider and hook to avoid accidentally re-exporting
-// provider-scoped functions that are not valid top-level bindings.
-export { ExternalDataProvider, useExternalData } from '../services/ExternalDataService';
+// @deprecated Use services/ExternalDataService instead
+export * from '../services/ExternalDataService';

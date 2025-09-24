@@ -1,23 +1,28 @@
-import React, { useState } from 'react';
+import communityScenes from 'figma:asset/39dd468cce8081c14f345796484cc8b182dc6bb6.png';
+import { Heart, MapPin, MessageCircle, Navigation, Share2, Shield, Star, Zap } from 'lucide-react';
+import { useState } from 'react';
+import rickshawVideo from '../assets/Rickshaw.webm';
+import { useLanguage } from '../services/LanguageService';
+import { getLocationAwarePosts, getLocationSpecificContent, useLocation } from '../services/LocationService';
+import AutoShareCard from './AutoShareCard';
+import { ChennaiPride } from './ChennaiPride';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
+import { LanguageToggle } from './LanguageToggle';
+import { LiveInfoPage } from './LiveInfoPage';
 import { Avatar } from './ui/avatar';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Badge } from './ui/badge';
-import { ImageWithFallback } from './figma/ImageWithFallback';
-import { ChennaiPride } from './ChennaiPride';
-import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from '../services/LanguageService';
-import { Heart, MessageCircle, Share2, MapPin, Calendar, Star, Sparkles, Shield, Navigation } from 'lucide-react';
-import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
-import { useLocation, getLocationSpecificContent, getLocationAwarePosts } from '../services/LocationService';
-import communityScenes from 'figma:asset/39dd468cce8081c14f345796484cc8b182dc6bb6.png';
 
 interface CommunityFeedProps {
   userLocation?: any;
+  pincode?: string;
 }
 
-export function CommunityFeed({ userLocation }: CommunityFeedProps) {
+export function CommunityFeed({ userLocation, pincode }: CommunityFeedProps) {
   const [showChennaiPride, setShowChennaiPride] = useState(false);
+  const [showLiveInfo, setShowLiveInfo] = useState(false);
   const { currentLocation, setLocationModalOpen } = useLocation();
   const { t } = useLanguage();
   
@@ -126,7 +131,18 @@ export function CommunityFeed({ userLocation }: CommunityFeedProps) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-orange-50 to-yellow-25 min-h-screen relative">
+    <>
+      {/* Show LiveInfoPage when requested */}
+      {showLiveInfo && (
+        <LiveInfoPage 
+          userLocation={activeLocation}
+          onBack={() => setShowLiveInfo(false)}
+        />
+      )}
+      
+      {/* Show CommunityFeed when not showing LiveInfo */}
+      {!showLiveInfo && (
+        <div className="bg-gradient-to-b from-orange-50 to-yellow-25 min-h-screen relative">
       {/* Community scenes background */}
       <div className="fixed inset-0 opacity-15 md:opacity-10 pointer-events-none">
         <ImageWithFallback
@@ -205,16 +221,31 @@ export function CommunityFeed({ userLocation }: CommunityFeedProps) {
       <div className="px-6 py-4">
         <div className="grid grid-cols-4 gap-3 mb-4">
           <Button variant="outline" className="flex-col h-auto py-3 border-orange-200 hover:bg-orange-50">
-            <IllustratedIcon src={ChennaiIcons.auto} alt="Auto" size="sm" className="mb-1" />
+            <div className="mb-1">
+              <video 
+                src={rickshawVideo}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-12 h-12 rounded-md object-cover"
+              >
+                <IllustratedIcon src={ChennaiIcons.auto} alt="Auto" size="sm" />
+              </video>
+            </div>
             <span className="text-xs text-[11px]">Auto Share</span>
           </Button>
           <Button variant="outline" className="flex-col h-auto py-3 border-orange-200 hover:bg-orange-50">
             <IllustratedIcon src={ChennaiIcons.food} alt="Food" size="sm" className="mb-1" />
             <span className="text-xs text-[11px]">Food Hunt</span>
           </Button>
-          <Button variant="outline" className="flex-col h-auto py-3 border-orange-200 hover:bg-orange-50">
-            <IllustratedIcon src={ChennaiIcons.temple} alt="Temple" size="sm" className="mb-1" />
-            <span className="text-xs">Temple Info</span>
+          <Button 
+            variant="outline" 
+            className="flex-col h-auto py-3 border-orange-200 hover:bg-orange-50"
+            onClick={() => setShowLiveInfo(true)}
+          >
+            <Zap className="w-4 h-4 mb-1" />
+            <span className="text-xs">Live Info & Alerts</span>
           </Button>
           <Button 
             variant="outline" 
@@ -230,6 +261,13 @@ export function CommunityFeed({ userLocation }: CommunityFeedProps) {
         {showChennaiPride && (
           <div className="mb-4">
             <ChennaiPride />
+          </div>
+        )}
+        
+        {/* Auto Share Card */}
+        {pincode && (
+          <div className="px-6 mb-4">
+            <AutoShareCard pincode={pincode} />
           </div>
         )}
         
@@ -327,6 +365,8 @@ export function CommunityFeed({ userLocation }: CommunityFeedProps) {
           </Card>
         ))}
       </div>
-    </div>
+        </div>
+      )}
+    </>
   );
 }
