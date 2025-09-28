@@ -1,7 +1,7 @@
 import { Twitter } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Badge } from "./ui/Badge";
-import { Card } from "./ui/Card";
+import { Badge } from "./ui/badge";
+import { Card } from "./ui/card";
 
 export default function TwitterFeedCard({ category = "traffic" }: { category?: string }) {
   const [tweets, setTweets] = useState<any[]>([]);

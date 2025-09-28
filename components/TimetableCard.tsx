@@ -22,7 +22,13 @@ interface TimetableEntry {
   frequencies: Frequency[];
 }
 
-export default function TimetableCard({ language }: { language: "en" | "ta" }) {
+interface TimetableCardProps {
+  language: "en" | "ta";
+  pincode?: string;
+}
+
+export default function TimetableCard({ language, pincode }: TimetableCardProps) {
+  void pincode;
   const [timetable, setTimetable] = useState<TimetableEntry[]>([]);
   const [status, setStatus] = useState("loading");
 

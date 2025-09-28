@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;700&display=swap');
+@import url('/styles/normalize.css');
+
+:root {
+  --ch-maroon: #4B1E1E;
+  --ch-turmeric: #E1AD01;
+  --ch-indigo: #26418f;
+  --ch-leaf: #2f7a4a;
+  --ch-coffee: #6B3F2B;
+  --ch-kolam: #FFFDF0;
+  --ch-paper: #FFF8EF;
+}
+
+/* Global resets and smoothing */
+html, body {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  color-adjust: exact !important;
+  text-rendering: optimizeLegibility !important;
+  font-family: Inter, Poppins, system-ui, -apple-system, 'Segoe UI', Roboto, 'Noto Sans Tamil', sans-serif !important;
+  background-color: var(--ch-kolam) !important;
+  color: #222 !important;
+}
+
+/* Bilingual typography helpers */
+.bilingual-header {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 0.75rem !important;
+}
+.bilingual-header .eng {
+  font-family: Inter, Poppins, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 1.25rem !important; /* 20px */
+  color: var(--ch-maroon) !important;
+}
+.bilingual-header .tam {
+  font-family: 'Noto Sans Tamil', 'Poppins', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important; /* 14px */
+  color: var(--ch-turmeric) !important;
+}
+
+/* Card defaults for Food Hunt */
+.card-food {
+  background: linear-gradient(180deg, var(--ch-kolam) 0%, var(--ch-paper) 100%) !important;
+  border: 1px solid rgba(226, 173, 1, 0.12) !important;
+  box-shadow: 0 8px 20px rgba(38,65,143,0.06) !important;
+  border-radius: 1rem !important;
+}
+
+/* Subtle silk weave microtexture */
+.silk-weave::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background-image: linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px) !important;
+  background-size: 6px 6px !important;
+  pointer-events: none !important;
+  mix-blend-mode: multiply !important;
+}
+
+/* Seat icon utilities */
+.seat-dot { width: 10px; height: 10px; border-radius: 9999px; display: inline-block; margin-right: 6px; }
+.seat-filled { background: var(--ch-maroon) !important; }
+.seat-empty { background: #e9e3db !important; }
+
+/* Responsive adjustments */
+@media (min-width: 640px) {
+  .bilingual-header .eng { font-size: 1.5rem !important; }
+  .bilingual-header .tam { font-size: 1rem !important; }
+}
+
+/* Accessibility helpers */
+.focus-ring:focus { outline: 3px solid rgba(38,65,143,0.12) !important; outline-offset: 2px !important; }
+
+/* Ensure headings won't be overridden by Tailwind utilities */
+h1, h2, h3 { font-family: Inter, Poppins, 'Noto Sans Tamil', sans-serif !important; }

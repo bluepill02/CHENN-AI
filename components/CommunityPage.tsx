@@ -1,20 +1,21 @@
 /**
- * CommunityPage - Main community interface with responsive grid layout
- * 
+ * CommunityPage - Main community interface with responsive content + live data layout
+ *
  * Layout Structure:
- * - Desktop (lg+): 3-column grid with CommunityFeed (2/3) and LiveDataWidget (1/3)
- * - Mobile (sm): Vertical stack with CommunityFeed first, LiveDataWidget below
- * 
+ * - Desktop (lg+): two-column grid with CommunityFeed (stretch) and LiveDataWidget (fixed 360px)
+ * - Mobile/tablet: vertical stack with CommunityFeed first, LiveDataWidget below (collapsible)
+ *
  * Features:
- * - Full viewport height (h-screen) with independent scrolling columns
- * - Left column: CommunityFeed takes 2/3 width on desktop, full height scrolling
- * - Right column: LiveDataWidget takes 1/3 width on desktop, full height scrolling
- * - No floating/absolute positioning - widget is always visible in grid
- * - Responsive: stacks vertically on mobile devices
- * - Visual separation with border and padding on right column
+ * - Full viewport height with independent scroll regions (feed and live data panel)
+ * - Live data column stays sticky within its container on desktop for quicker glanceability
+ * - Graceful degradation when live data services are unavailable (panel collapses)
  */
 
+import { ChevronDown, ChevronUp } from 'lucide-react';
+import { useMemo, useState } from 'react';
 import { CommunityFeed } from './CommunityFeed';
+import { LiveDataWidget } from './LiveData/LiveDataWidget';
+import { Button } from './ui/button';
 
 export interface CommunityPageProps {
   /** User location data for location-aware content */
@@ -25,22 +26,51 @@ export interface CommunityPageProps {
   className?: string;
 }
 
-export function CommunityPage({ 
-  userLocation, 
+export function CommunityPage({
+  userLocation,
   pincode = '600001',
-  className = '' 
+  className = '',
 }: CommunityPageProps) {
+  const [showLiveDataMobile, setShowLiveDataMobile] = useState(false);
+  const toggleLabel = useMemo(
+    () => (showLiveDataMobile ? 'Hide live data' : 'Show live data & alerts'),
+    [showLiveDataMobile],
+  );
+
   return (
-    <div className={`h-full bg-gradient-to-br from-orange-50 via-yellow-25 to-orange-25 ${className}`}>
-      
-      {/* Full Width: Community Feed Only */}
-      <div className="h-full overflow-y-auto">
-        <CommunityFeed 
-          userLocation={userLocation} 
-          pincode={pincode}
-        />
+    <div
+      className={`h-full bg-gradient-to-br from-orange-50 via-yellow-25 to-orange-25 ${className}`}
+    >
+      <div className="mx-auto flex h-full w-full max-w-[1600px] flex-col gap-4 px-0 pb-4 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-6 lg:px-6">
+        <div className="h-full overflow-y-auto">
+          <CommunityFeed userLocation={userLocation} />
+        </div>
+
+        <aside className="relative hidden h-full lg:flex">
+          <div className="sticky top-4 flex h-[calc(100vh-2rem)] w-full overflow-hidden rounded-3xl border border-orange-100/70 bg-white/70 shadow-xl shadow-orange-200/30 backdrop-blur">
+            <LiveDataWidget pincode={pincode} className="overflow-y-auto" />
+          </div>
+        </aside>
+
+        <div className="lg:hidden">
+          <Button
+            variant="outline"
+            size="sm"
+            className="mb-2 w-full border-orange-200 bg-white/70 text-orange-700"
+            onClick={() => setShowLiveDataMobile((prev) => !prev)}
+          >
+            <span className="flex items-center justify-center gap-2">
+              {toggleLabel}
+              {showLiveDataMobile ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </span>
+          </Button>
+          {showLiveDataMobile ? (
+            <div className="rounded-3xl border border-orange-100/70 bg-white/80 shadow-lg shadow-orange-200/20 backdrop-blur">
+              <LiveDataWidget pincode={pincode} className="max-h-[75vh] overflow-y-auto" />
+            </div>
+          ) : null}
+        </div>
       </div>
-      
     </div>
   );
 }

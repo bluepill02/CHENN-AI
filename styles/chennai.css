@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Merriweather:wght@700&display=swap');
+
+/* Chennai theme overrides */
+/* Force sRGB rendering intent where possible and smoothing */
+:root {
+  color-scheme: light dark;
+}
+html, body {
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  color-adjust: exact !important; /* prefer exact color rendering when supported */
+}
+
+body {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+h1, .chennai-title {
+  font-family: 'Merriweather', serif !important;
+  letter-spacing: 0.3px !important;
+  text-transform: none !important;
+}
+
+h2 {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* Subtle textured overlay to give a vintage Chennai feel */
+.chennai-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 14px 14px;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Title emphasis */
+.chennai-title {
+  font-weight: 700 !important;
+}
+
+/* Ensure important headings keep style against Tailwind overrides */
+header h1, header h2 {
+  color: inherit !important;
+}
+
+/* Palette variables for community feed */
+:root {
+  --maroon: #4B1E1E; /* deep maroon (temple tiles) */
+  --turmeric: #E1AD01; /* turmeric yellow */
+  --indigo: #26418f; /* indigo blue */
+  --leaf: #2f7a4a; /* green accent */
+  --ivory: #fffdf0; /* light ivory */
+  --paper: #fff8ef; /* subtle paper */
+}
+
+/* Utility color classes */
+.text-maroon { color: var(--maroon) !important; }
+.text-turmeric { color: var(--turmeric) !important; }
+.text-indigo { color: var(--indigo) !important; }
+.text-leaf { color: var(--leaf) !important; }
+.bg-ivory { background-color: var(--ivory) !important; }
+.border-turmeric { border-color: var(--turmeric) !important; }
+
+/* Kolam micro-texture background (very subtle) */
+.kolam-pattern::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M10 60 C20 20, 100 20, 110 60 C100 100, 20 100, 10 60Z' fill='none' stroke='%23F3E2C6' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.55;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+/* Badge styles for contextual badges */
+.badge-festival { background-color: var(--maroon); color: white !important; }
+.badge-commute { background-color: var(--indigo); color: white !important; }
+.badge-temple { background-color: var(--turmeric); color: var(--maroon) !important; }
+
+/* Seat visualization */
+.seat-dot { width: 10px; height: 10px; border-radius: 9999px; display: inline-block; margin-right: 4px; }
+.seat-filled { background: var(--maroon); }
+.seat-empty { background: #e9e3db; }
+
+
+/* Provide a small helpful utility in case some elements use wide-gamut colors */
+@media (color-gamut: p3) {
+  img, picture, video {
+    /* Force images to be treated as sRGB when possible by using CSS filter fallback */
+    filter: saturate(1) contrast(1) !important;
+  }
+}

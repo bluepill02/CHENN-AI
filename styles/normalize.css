@@ -1,0 +1,28 @@
+/* modern-normalize 1.1.0 | MIT License | https://github.com/sindresorhus/modern-normalize */
+
+/* Document */
+html{line-height:1.15;-webkit-text-size-adjust:100%}
+
+/* Sections */
+body{margin:0}
+
+/* Grouping content */
+hr{height:0;color:inherit;border-top:1px solid}
+
+/* Text-level semantics */
+pre{font-family:monospace,monospace;font-size:1em}
+
+/* Forms */
+button,input,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}
+
+/* Images */
+img{border-style:none;max-width:100%;height:auto;display:block}
+
+/* Links */
+a{background-color:transparent}
+
+/* Accessibility */
+[hidden]{display:none}
+
+/* Ensure consistent box-sizing */
+*,*::before,*::after{box-sizing:border-box}

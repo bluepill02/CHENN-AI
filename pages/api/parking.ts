@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
   try {
     const response = await fetch("https://commuters-data.chennaimetrorail.org/parkingavailability");
     const html = await response.text();

@@ -19,10 +19,11 @@
  */
 
 import { ArrowLeft, RefreshCw, Zap } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLanguage } from '../services/LanguageService';
+import { useLiveAlerts } from '../services/LiveAlertsService';
 import BusByPincodeCard from './BusByPincodeCard';
-import { LiveAlertsPage } from './LiveAlertsPage';
+import { LiveAlertsPanel } from './LiveData/LiveAlertsPanel';
 import { TrafficStatusPanel } from './LiveData/TrafficStatusPanel';
 import { WeatherPanel } from './LiveData/WeatherPanel';
 import TimetableCard from './TimetableCard';
@@ -51,6 +52,13 @@ export function LiveInfoPage({
 }: LiveInfoPageProps) {
   const { language } = useLanguage();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const {
+    alerts,
+    loading: alertsLoading,
+    error: alertsError,
+    refresh: refreshAlerts,
+    acknowledge,
+  } = useLiveAlerts();
 
   // Create location object for components
   const locationData = userLocation || {
@@ -59,13 +67,28 @@ export function LiveInfoPage({
     district: 'Chennai'
   };
 
+  useEffect(() => {
+    void refreshAlerts({ pincode: locationData.pincode, area: locationData.area });
+  }, [locationData.area, locationData.pincode, refreshAlerts]);
+
   // Handle refresh
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Simulate refresh delay
-    setTimeout(() => {
-      setIsRefreshing(false);
-    }, 1000);
+    try {
+      await refreshAlerts({ pincode: locationData.pincode, area: locationData.area });
+    } finally {
+      setTimeout(() => {
+        setIsRefreshing(false);
+      }, 600);
+    }
+  };
+
+  const handleAlertAcknowledge = async (alertId: string) => {
+    try {
+      await acknowledge(alertId);
+    } catch (error) {
+      console.warn('LiveInfoPage: failed to acknowledge alert', error);
+    }
   };
 
   // Bilingual content
@@ -151,7 +174,35 @@ export function LiveInfoPage({
           <>
             {/* Live Alerts Section */}
             <Card className="p-6">
-              <LiveAlertsPage />
+              <div className="mb-4 flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">Live Alerts</h2>
+                  <p className="text-sm text-gray-500">
+                    {locationData.area} • {locationData.pincode}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => void refreshAlerts({ pincode: locationData.pincode, area: locationData.area })}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  disabled={alertsLoading}
+                >
+                  <RefreshCw className={`w-4 h-4 ${alertsLoading ? 'animate-spin' : ''}`} />
+                  {language.startsWith('ta') ? 'புதுப்பிக்க' : 'Refresh'}
+                </Button>
+              </div>
+              <LiveAlertsPanel
+                alerts={alerts}
+                loading={alertsLoading}
+                error={alertsError}
+                onAcknowledge={handleAlertAcknowledge}
+                emptyMessage={
+                  language.startsWith('ta')
+                    ? 'தற்போது எச்சரிக்கைகள் இல்லை.'
+                    : 'All clear! No alerts right now.'
+                }
+              />
             </Card>
 
             {/* Weather & Traffic Row */}

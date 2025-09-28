@@ -1,0 +1,39 @@
+[
+  {
+    "id": 101,
+    "type": "group",
+    "name": "Mylapore Cyclone Watch",
+    "lastMessage": "Control room: Stay safe indoors",
+    "time": "5 min",
+    "unread": 2,
+    "members": 158,
+    "isActive": true,
+    "area": "Mylapore",
+    "pincode": "600004",
+    "tags": ["Weather", "Alert"],
+    "language": "Tamil + English",
+    "sentiment": "urgent",
+    "messages": [
+      { "id": 9001, "sender": "Control room", "message": "Wind speeds touching 80kmph", "time": "18:42" },
+      { "id": 9002, "sender": "Volunteer", "message": "Barricades ready on RK Mutt Road", "time": "18:47" }
+    ]
+  },
+  {
+    "id": 202,
+    "type": "announcement",
+    "name": "Anna Nagar Night Patrol",
+    "lastMessage": "Ward office: Patrol starting at 11 PM",
+    "time": "12 min",
+    "unread": 0,
+    "isOfficial": true,
+    "verified": true,
+    "area": "Anna Nagar",
+    "pincode": "600040",
+    "tags": ["Safety", "Community"],
+    "language": "English",
+    "sentiment": "positive",
+    "messages": [
+      { "id": 9101, "sender": "Ward office", "message": "Volunteers please assemble", "time": "18:30" }
+    ]
+  }
+]

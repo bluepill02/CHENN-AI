@@ -1,7 +1,7 @@
 import { MapPin, Twitter } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Badge } from "./ui/Badge";
-import { Card } from "./ui/Card";
+import { Badge } from "./ui/badge";
+import { Card } from "./ui/card";
 
 export default function TwitterLocalCard({ pincode }: { pincode: string }) {
   const [tweets, setTweets] = useState<any[]>([]);

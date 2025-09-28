@@ -109,10 +109,8 @@ export class RealDataService {
   }
 
   // Fetch real traffic data for Chennai routes
-  static async getTrafficData(location: LocationData): Promise<RealTrafficData[]> {
+  static async getTrafficData(_location: LocationData): Promise<RealTrafficData[]> {
     try {
-      const { latitude, longitude } = location;
-      
       // Define major Chennai routes based on location
       const chennaiRoutes = [
         { name: 'Anna Salai', points: ['13.0627,80.2707', '13.0878,80.2785'] },
@@ -184,6 +182,7 @@ export class RealDataService {
       // For water supply schedules, cuts, quality reports
       
       return {
+        pincode,
         supplyStatus: 'normal',
         nextCut: null,
         quality: 'good',

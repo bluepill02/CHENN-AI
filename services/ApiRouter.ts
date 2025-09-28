@@ -3,6 +3,7 @@
 // In production, this would be served by Express, Vercel, or Netlify Functions
 
 import { BusApiResponse, handleBusApiRequest } from './BusApiHandler';
+import { handleProfileDashboardRequest } from './ProfileApiHandler';
 
 // NEW: API Routes registry
 class ApiRouter {
@@ -25,6 +26,9 @@ class ApiRouter {
     // Register the /api/bus endpoint
     this.routes.set('/api/bus', this.handleBusRequest.bind(this));
     this.routes.set('/api/bus.json', this.handleBusRequest.bind(this));
+
+  // Profile dashboard simulation endpoints
+  this.routes.set('/api/profile/dashboard', this.handleProfileDashboard.bind(this));
     
     // NEW: Additional endpoints that might be useful
     this.routes.set('/api/health', this.handleHealthCheck.bind(this));
@@ -35,6 +39,11 @@ class ApiRouter {
   private async handleBusRequest(): Promise<BusApiResponse> {
     console.log('[API Router] Handling /api/bus request');
     return await handleBusApiRequest();
+  }
+
+  private async handleProfileDashboard() {
+    console.log('[API Router] Handling /api/profile/dashboard request');
+    return await handleProfileDashboardRequest();
   }
 
   // NEW: Health check endpoint

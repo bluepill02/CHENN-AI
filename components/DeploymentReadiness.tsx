@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from './ui/card';
+import { AlertTriangle, CheckCircle, Globe, Info, Smartphone, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { CheckCircle, AlertTriangle, Info, Globe, Smartphone, Zap } from 'lucide-react';
+import { Card } from './ui/card';
 
 interface ReadinessCheck {
   name: string;

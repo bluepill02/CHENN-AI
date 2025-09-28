@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { ChatDashboardProvider } from '../services/ChatDashboardService';
 import { ExternalDataProvider } from '../services/ExternalDataService';
 import { LocationProvider, useLocation } from '../services/LocationService';
+import { ProfileDashboardProvider } from '../services/ProfileDashboardService';
 import { RealTimeDataProvider } from '../services/RealTimeDataService';
 import { BottomNav } from './BottomNav';
 import { ChatScreen } from './ChatScreen';
@@ -60,7 +62,16 @@ export function MainApp({ userLocation }: MainAppProps) {
     <LocationProvider>
       <RealTimeDataProvider>
         <ExternalDataProvider>
-          <MainAppContent userLocation={userLocation} />
+          <ChatDashboardProvider
+            initialFilters={{
+              area: userLocation?.area ?? userLocation?.location ?? null,
+              query: userLocation?.area ?? '',
+            }}
+          >
+            <ProfileDashboardProvider initialArea={userLocation?.area ?? userLocation?.location ?? null}>
+              <MainAppContent userLocation={userLocation} />
+            </ProfileDashboardProvider>
+          </ChatDashboardProvider>
         </ExternalDataProvider>
       </RealTimeDataProvider>
     </LocationProvider>

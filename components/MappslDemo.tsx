@@ -1,16 +1,65 @@
 import { AlertCircle, CheckCircle, Clock, MapPin } from 'lucide-react';
 import { useState } from 'react';
-import { useExternalData } from '../services/ExternalDataService';
+import { getAllPincodeProfiles, getPincodeProfile } from '../services/PincodeRepository';
+import type { PincodeProfile } from '../types/pincode';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 import { Input } from './ui/input';
 
+interface LocationResult {
+  pincode: string;
+  area: string;
+  city: string;
+  district: string;
+  lat?: number;
+  lng?: number;
+  formatted_address: string;
+}
+
+const buildLocationResult = (profile: PincodeProfile): LocationResult => ({
+  pincode: profile.pincode,
+  area: profile.area.english,
+  city: 'Chennai',
+  district: profile.district,
+  lat: profile.latitude,
+  lng: profile.longitude,
+  formatted_address: `${profile.area.english}, ${profile.zone.english}, Chennai - ${profile.pincode}`
+});
+
+const validateChennaiPincode = async (code: string): Promise<LocationResult | null> => {
+  const profile = getPincodeProfile(code);
+  if (!profile) {
+    return null;
+  }
+  return buildLocationResult(profile);
+};
+
+const getNearestLocation = async (latitude: number, longitude: number): Promise<LocationResult | null> => {
+  const profiles = getAllPincodeProfiles().filter(
+    (profile): profile is PincodeProfile & { latitude: number; longitude: number } =>
+      typeof profile.latitude === 'number' && typeof profile.longitude === 'number'
+  );
+
+  if (profiles.length === 0) {
+    return null;
+  }
+
+  const nearest = profiles.reduce<{ profile: PincodeProfile; distance: number } | null>((closest, profile) => {
+    const distance = Math.hypot(profile.latitude! - latitude, profile.longitude! - longitude);
+    if (!closest || distance < closest.distance) {
+      return { profile, distance };
+    }
+    return closest;
+  }, null);
+
+  return nearest ? buildLocationResult(nearest.profile) : null;
+};
+
 export function MappslDemo() {
-  const { validateChennaiPincode, getMappslLocationData } = useExternalData();
   const [pincode, setPincode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<LocationResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const testPincode = async () => {
@@ -47,7 +96,7 @@ export function MappslDemo() {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           try {
-            const locationData = await getMappslLocationData(
+            const locationData = await getNearestLocation(
               position.coords.latitude,
               position.coords.longitude
             );

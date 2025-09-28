@@ -16,6 +16,8 @@
  */
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import type { PincodeLocalContent } from '../types/pincode';
+import { getPincodeProfile } from './PincodeRepository';
 
 // Indian pincode validation pattern
 const PINCODE_REGEX = /^[1-9][0-9]{5}$/;
@@ -43,11 +45,17 @@ export interface PincodeContextType {
 
 export interface PincodeInfo {
   pincode: string;
-  area?: string;
-  district?: string;
-  state?: string;
-  zone?: string;
-  tamil?: string;
+  area: string;
+  areaTamil?: string;
+  district: string;
+  state: string;
+  zone: string;
+  zoneTamil?: string;
+  metroCorridors?: string[];
+  serviceZones?: string[];
+  localContent?: PincodeLocalContent;
+  busStops?: string[];
+  twitterQueries?: string[];
 }
 
 interface PincodeContextProviderProps {
@@ -63,25 +71,6 @@ export function PincodeContextProvider({ children }: PincodeContextProviderProps
   const [isLoadingServices, setIsLoadingServices] = useState(false);
   const [failedServices, setFailedServices] = useState<string[]>([]);
 
-  // Extended Chennai pincode database
-  const chennaiPincodes: Record<string, PincodeInfo> = {
-    '600001': { pincode: '600001', area: 'Fort St. George', district: 'Chennai', state: 'Tamil Nadu', zone: 'Central Chennai', tamil: 'ஃபோர்ட்' },
-    '600002': { pincode: '600002', area: 'Mount Road', district: 'Chennai', state: 'Tamil Nadu', zone: 'Central Chennai', tamil: 'மவுண்ட் ரோடு' },
-    '600003': { pincode: '600003', area: 'Broadway', district: 'Chennai', state: 'Tamil Nadu', zone: 'Central Chennai', tamil: 'பிராட்வே' },
-    '600004': { pincode: '600004', area: 'Mylapore', district: 'Chennai', state: 'Tamil Nadu', zone: 'South Chennai', tamil: 'மயிலாப்பூர்' },
-    '600005': { pincode: '600005', area: 'Triplicane', district: 'Chennai', state: 'Tamil Nadu', zone: 'Central Chennai', tamil: 'திருவல்லிக்கேணி' },
-    '600006': { pincode: '600006', area: 'Chepauk', district: 'Chennai', state: 'Tamil Nadu', zone: 'Central Chennai', tamil: 'செப்பாக்கம்' },
-    '600014': { pincode: '600014', area: 'Vadapalani', district: 'Chennai', state: 'Tamil Nadu', zone: 'West Chennai', tamil: 'வடபழனி' },
-    '600017': { pincode: '600017', area: 'T. Nagar', district: 'Chennai', state: 'Tamil Nadu', zone: 'South Chennai', tamil: 'டி. நகர்' },
-    '600020': { pincode: '600020', area: 'Adyar', district: 'Chennai', state: 'Tamil Nadu', zone: 'South Chennai', tamil: 'அடையார்' },
-    '600024': { pincode: '600024', area: 'Anna Nagar', district: 'Chennai', state: 'Tamil Nadu', zone: 'North Chennai', tamil: 'அண்ணா நகர்' },
-    '600028': { pincode: '600028', area: 'Velachery', district: 'Chennai', state: 'Tamil Nadu', zone: 'South Chennai', tamil: 'வேளச்சேரி' },
-    '600034': { pincode: '600034', area: 'Kodambakkam', district: 'Chennai', state: 'Tamil Nadu', zone: 'West Chennai', tamil: 'கோடம்பாக்கம்' },
-    '600041': { pincode: '600041', area: 'Royapettah', district: 'Chennai', state: 'Tamil Nadu', zone: 'Central Chennai', tamil: 'ராயப்பேட்டை' },
-    '600090': { pincode: '600090', area: 'Besant Nagar', district: 'Chennai', state: 'Tamil Nadu', zone: 'South Chennai', tamil: 'பெசன்ட் நகர்' },
-    '600119': { pincode: '600119', area: 'Sholinganallur', district: 'Chennai', state: 'Tamil Nadu', zone: 'IT Corridor', tamil: 'சோளிங்கநல்லூர்' }
-  };
-
   const validatePincode = useCallback((pincode: string): { isValid: boolean; error?: string } => {
     if (!pincode) {
       return { isValid: false, error: 'Pincode is required' };
@@ -95,7 +84,25 @@ export function PincodeContextProvider({ children }: PincodeContextProviderProps
   }, []);
 
   const getPincodeInfo = useCallback((pincode: string): PincodeInfo | null => {
-    return chennaiPincodes[pincode] || null;
+    const profile = getPincodeProfile(pincode);
+    if (!profile) {
+      return null;
+    }
+
+    return {
+      pincode: profile.pincode,
+      area: profile.area.english,
+      areaTamil: profile.area.tamil,
+      district: profile.district,
+      state: profile.state,
+      zone: profile.zone.english,
+      zoneTamil: profile.zone.tamil,
+      metroCorridors: profile.metroCorridors,
+      serviceZones: profile.serviceZones,
+      localContent: profile.localContent,
+      busStops: profile.busStops,
+      twitterQueries: profile.twitterQueries,
+    };
   }, []);
 
   const triggerServices = useCallback(async (pincode: string) => {
@@ -110,25 +117,27 @@ export function PincodeContextProvider({ children }: PincodeContextProviderProps
       { name: 'twitterService', endpoint: `/api/twitterFeed?pincode=${pincode}` }
     ];
 
-    const failed: string[] = [];
-
-    // Test each service endpoint
-    for (const service of services) {
+    const results = await Promise.all(services.map(async (service) => {
       try {
         console.debug(`📡 PincodeContext: Testing ${service.name}...`);
         const response = await fetch(service.endpoint);
-        
+
         if (!response.ok) {
           console.debug(`❌ PincodeContext: ${service.name} failed with status ${response.status}`);
-          failed.push(service.name);
-        } else {
-          console.debug(`✅ PincodeContext: ${service.name} succeeded`);
+          return { name: service.name, failed: true };
         }
+
+        console.debug(`✅ PincodeContext: ${service.name} succeeded`);
+        return { name: service.name, failed: false };
       } catch (error) {
         console.debug(`❌ PincodeContext: ${service.name} failed with error:`, error);
-        failed.push(service.name);
+        return { name: service.name, failed: true };
       }
-    }
+    }));
+
+    const failed = results
+      .filter((result) => result.failed)
+      .map((result) => result.name);
 
     setFailedServices(failed);
     setIsLoadingServices(false);
@@ -154,6 +163,15 @@ export function PincodeContextProvider({ children }: PincodeContextProviderProps
     }
 
     try {
+      const metadata = getPincodeInfo(pincode);
+      if (!metadata) {
+        const message = 'Pincode not supported yet in Chennai network';
+        setValidationError(message);
+        setIsValidating(false);
+        console.debug('❌ PincodeContext: Metadata not found for pincode:', pincode);
+        return false;
+      }
+
       // Set the pincode immediately
       setCurrentPincode(pincode);
       
@@ -169,7 +187,7 @@ export function PincodeContextProvider({ children }: PincodeContextProviderProps
       console.debug('❌ PincodeContext: Error setting pincode:', error);
       return false;
     }
-  }, [validatePincode, triggerServices]);
+  }, [validatePincode, triggerServices, getPincodeInfo]);
 
   const clearPincode = useCallback(() => {
     console.debug('🏷️ PincodeContext: Clearing pincode');

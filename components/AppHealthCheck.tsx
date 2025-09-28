@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from './ui/card';
+import { AlertCircle, CheckCircle, Clock, Database, Users, Wifi } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
-import { CheckCircle, AlertCircle, Clock, Wifi, Database, Users } from 'lucide-react';
+import { Card } from './ui/card';
 
 interface HealthCheck {
   name: string;

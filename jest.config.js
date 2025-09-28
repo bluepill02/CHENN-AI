@@ -13,12 +13,17 @@ module.exports = {
       tsconfig: {
         jsx: 'react-jsx'
       }
-    }]
+    }],
+    '^.+\\.(js|jsx|mjs)$': 'babel-jest'
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(msw|@mswjs|@open-draft|until-async|headers-polyfill)/)'
+  ],
   testMatch: [
     '<rootDir>/**/__tests__/**/*.(ts|tsx)',
     '<rootDir>/**/*.(test|spec).(ts|tsx)'
   ],
+  testPathIgnorePatterns: ['<rootDir>/tests/e2e/'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   collectCoverageFrom: [
     'components/**/*.{ts,tsx}',

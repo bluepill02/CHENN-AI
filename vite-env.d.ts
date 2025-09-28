@@ -3,6 +3,13 @@
 interface ImportMetaEnv {
   readonly VITE_WEATHER_API_KEY: string;
   readonly VITE_MAPPLS_API_KEY: string;
+  readonly VITE_COMMUNITY_API_BASE_URL?: string;
+  readonly VITE_COMMUNITY_API_KEY?: string;
+  readonly VITE_COMMUNITY_MEDIA_UPLOAD?: 'enabled' | 'disabled';
+  readonly VITE_AUTOSHARE_API_BASE_URL?: string;
+  readonly VITE_AUTOSHARE_API_KEY?: string;
+  readonly VITE_FOODHUNT_API_BASE_URL?: string;
+  readonly VITE_FOODHUNT_API_KEY?: string;
   // Add other environment variables here as needed
 }
 

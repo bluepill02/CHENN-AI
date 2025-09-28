@@ -137,7 +137,7 @@ export function PincodePage({
                 disabled={isValidating}
               />
               {inputValue && !inputValidation.isValid && (
-                <div className="absolute top-full left-0 mt-1 text-xs text-red-200">
+                <div className="absolute top-full left-0 mt-1 text-xs text-red-200" role="alert">
                   {inputValidation.error}
                 </div>
               )}
@@ -146,9 +146,13 @@ export function PincodePage({
               type="submit" 
               disabled={!inputValidation.isValid || isValidating}
               className="bg-white text-orange-500 hover:bg-gray-100 disabled:opacity-50"
+              aria-label="Set Pincode"
             >
               {isValidating ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                  <span className="sr-only">Set Pincode</span>
+                </>
               ) : (
                 'Set Pincode'
               )}
@@ -164,6 +168,11 @@ export function PincodePage({
               </Button>
             )}
           </form>
+          {isValidating && (
+            <p className="mt-3 text-sm text-orange-100" role="status">
+              Validating pincode...
+            </p>
+          )}
         </Card>
 
         {/* Current Pincode Status */}
@@ -175,9 +184,17 @@ export function PincodePage({
                 <div>
                   <div className="font-medium">Active Pincode: {currentPincode}</div>
                   {pincodeInfo && (
-                    <div className="text-sm text-gray-600">
-                      {pincodeInfo.area} • {pincodeInfo.zone}
-                      {pincodeInfo.tamil && <span className="ml-2">• {pincodeInfo.tamil}</span>}
+                    <div>
+                      <div className="text-sm text-gray-600">
+                        {pincodeInfo.area} • {pincodeInfo.zone}
+                      </div>
+                      {(pincodeInfo.areaTamil || pincodeInfo.zoneTamil) && (
+                        <div className="text-xs text-gray-500">
+                          {[pincodeInfo.areaTamil, pincodeInfo.zoneTamil]
+                            .filter(Boolean)
+                            .join(' • ')}
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -208,7 +225,7 @@ export function PincodePage({
           <Alert className="border-amber-200 bg-amber-50">
             <AlertCircle className="h-4 w-4 text-amber-600" />
             <AlertDescription className="text-amber-800">
-              Some services are unavailable for this pincode. Showing fallback data for: {failedServices.join(', ')}.
+              Some services are currently unavailable for this pincode. Showing fallback data for: {failedServices.join(', ')}.
               <Button
                 variant="link"
                 size="sm"
@@ -248,25 +265,25 @@ export function PincodePage({
               {/* Weather Panel */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-gray-700">Weather Information</h3>
-                <WeatherPanel />
+                <WeatherPanel pincode={currentPincode} />
               </div>
 
               {/* Traffic Panel */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-gray-700">Traffic Updates</h3>
-                <TrafficPanel />
+                <TrafficPanel pincode={currentPincode} />
               </div>
 
               {/* Bus Services */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-gray-700">Bus Services</h3>
-                <BusByPincodeCard />
+                <BusByPincodeCard pincode={currentPincode} />
               </div>
 
               {/* Metro/CMRL Services */}
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-gray-700">Metro Services</h3>
-                <TimetableCard language="en" />
+                <TimetableCard language="en" pincode={currentPincode} />
               </div>
 
               {/* Twitter Local Updates */}
@@ -286,23 +303,21 @@ export function PincodePage({
               */}
             </div>
 
-            {/* Debug Information */}
-            {showDebugInfo && (
-              <Card className="p-4 bg-gray-50 border-dashed">
-                <h4 className="font-medium mb-2">Debug Information</h4>
-                <div className="space-y-2 text-sm font-mono">
-                  <div>Current Pincode: {currentPincode}</div>
-                  <div>Is Validating: {isValidating.toString()}</div>
-                  <div>Is Loading Services: {isLoadingServices.toString()}</div>
-                  <div>Failed Services: [{failedServices.join(', ')}]</div>
-                  <div>Validation Error: {validationError || 'None'}</div>
-                  {pincodeInfo && (
-                    <div>Pincode Info: {JSON.stringify(pincodeInfo, null, 2)}</div>
-                  )}
-                </div>
-              </Card>
-            )}
           </>
+        )}
+
+        {showDebugInfo && (
+          <Card className="p-4 bg-gray-50 border-dashed">
+            <h4 className="font-medium mb-2">Debug Information</h4>
+            <div className="space-y-2 text-sm font-mono">
+              <div>Current Pincode: {currentPincode ?? 'None'}</div>
+              <div>Is Validating: {isValidating.toString()}</div>
+              <div>Is Loading Services: {isLoadingServices.toString()}</div>
+              <div>Failed Services: [{failedServices.join(', ')}]</div>
+              <div>Validation Error: {validationError || 'None'}</div>
+              <div>Pincode Info: {pincodeInfo ? JSON.stringify(pincodeInfo, null, 2) : 'None'}</div>
+            </div>
+          </Card>
         )}
 
         {/* Empty State */}

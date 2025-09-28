@@ -128,23 +128,6 @@ export function ExternalDataProvider({ children }: ExternalDataProviderProps) {
   const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
   const CHENNAI_QUERY = 'Chennai,IN';
 
-  // Check if OpenWeatherMap API is available
-  const checkWeatherAPIHealth = async (): Promise<boolean> => {
-    try {
-      if (!WEATHER_API_KEY) {
-        console.warn('Weather API key not configured');
-        return false;
-      }
-      const response = await fetch(
-        `${WEATHER_API_URL}?q=${CHENNAI_QUERY}&units=metric&appid=${WEATHER_API_KEY}`,
-        { method: 'HEAD' }
-      );
-      return response.ok;
-    } catch {
-      return false;
-    }
-  };
-
   // Fetch real weather data from OpenWeatherMap API
   const fetchWeatherData = async (): Promise<WeatherData> => {
     try {

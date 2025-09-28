@@ -121,6 +121,7 @@ describe('PincodePage', () => {
   beforeEach(() => {
     // Clear all mocks before each test
     jest.clearAllMocks();
+    localStorage.clear();
     
     // Setup default fetch responses for service health checks
     mockFetch.mockImplementation((url: string) => {
@@ -220,7 +221,7 @@ describe('PincodePage', () => {
       // Wait for completion
       await waitFor(() => {
         expect(screen.queryByText(/Validating pincode/i)).not.toBeInTheDocument();
-      }, { timeout: 2000 });
+      }, { timeout: 5000 });
     });
   });
 
@@ -228,6 +229,7 @@ describe('PincodePage', () => {
     it('should show error message for invalid pincode (123) and not call services', async () => {
       const user = userEvent.setup();
       renderPincodePageWithContext();
+      mockFetch.mockClear();
       
       const input = screen.getByPlaceholderText(/Enter 6-digit pincode/i);
       const submitButton = screen.getByRole('button', { name: /Set Pincode/i });

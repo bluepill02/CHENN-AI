@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Card } from './ui/card';
-import { Badge } from './ui/badge';
-import { Input } from './ui/input';
+import chennaiWaterfront from 'figma:asset/8ee111ffe3789e0e3d9ea32a4a2b2a606ac32e8f.png';
+import { AlertCircle, CheckCircle, MapPin, Shield, Users } from 'lucide-react';
+import { useState } from 'react';
+import { useLanguage } from '../services/LanguageService';
+import { useLocation } from '../services/LocationService';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { LanguageToggle } from './LanguageToggle';
-import { useLanguage } from '../services/LanguageService';
-import { MapPin, Shield, Users, CheckCircle, AlertCircle } from 'lucide-react';
-import { useLocation } from '../services/LocationService';
-import chennaiWaterfront from 'figma:asset/8ee111ffe3789e0e3d9ea32a4a2b2a606ac32e8f.png';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Card } from './ui/card';
+import { Input } from './ui/input';
 
 interface PincodeVerificationProps {
   onVerificationComplete: (pincodeData: any) => void;
@@ -21,25 +21,6 @@ export function PincodeVerification({ onVerificationComplete, onSkip }: PincodeV
   const [locationData, setLocationData] = useState<any>(null);
   const { verifyLocation, isVerifying } = useLocation();
   const { t } = useLanguage();
-
-  // Chennai pincode database with local areas
-  const chennaiPincodes = {
-    '600001': { area: 'Fort St. George • ஃபோர்ட்', zone: 'Central Chennai', tamil: 'மத்திய சென்னை' },
-    '600002': { area: 'Mount Road • மவுண்ட் ரோடு', zone: 'Central Chennai', tamil: 'மத்திய சென்னை' },
-    '600003': { area: 'Broadway • பிராட்வே', zone: 'Central Chennai', tamil: 'மத்திய சென்னை' },
-    '600004': { area: 'Mylapore • மயிலாப்பூர்', zone: 'South Chennai', tamil: 'தென் சென்னை' },
-    '600005': { area: 'Triplicane • திருவல்லிக்கேணி', zone: 'Central Chennai', tamil: 'மத்திய சென்னை' },
-    '600006': { area: 'Chepauk • செப்பாக்கம்', zone: 'Central Chennai', tamil: 'மத்திய சென்னை' },
-    '600014': { area: 'Vadapalani • வடபழனி', zone: 'West Chennai', tamil: 'மேற்கு சென்னை' },
-    '600017': { area: 'T. Nagar • டி. நகர்', zone: 'South Chennai', tamil: 'தென் சென்னை' },
-    '600020': { area: 'Adyar • அடையார்', zone: 'South Chennai', tamil: 'தென் சென்னை' },
-    '600024': { area: 'Anna Nagar • அண்ணா நகர்', zone: 'North Chennai', tamil: 'வட சென்னை' },
-    '600028': { area: 'Velachery • வேளச்சேரி', zone: 'South Chennai', tamil: 'தென் சென்னை' },
-    '600034': { area: 'Kodambakkam • கோடம்பாக்கம்', zone: 'West Chennai', tamil: 'மேற்கு சென்னை' },
-    '600041': { area: 'Royapettah • ராயப்பேட்டை', zone: 'Central Chennai', tamil: 'மத்திய சென்னை' },
-    '600090': { area: 'Besant Nagar • பெசன்ட் நகர்', zone: 'South Chennai', tamil: 'தென் சென்னை' },
-    '600119': { area: 'Sholinganallur • சோளிங்கநல்லூர்', zone: 'IT Corridor', tamil: 'IT காரிடார்' }
-  };
 
   const handleVerification = async () => {
     if (pincode.length !== 6) {
@@ -174,8 +155,16 @@ export function PincodeVerification({ onVerificationComplete, onSkip }: PincodeV
                   📍 {locationData.area}
                 </Badge>
                 <p className="text-xs text-gray-500 mt-2">
-                  Zone: {locationData.zone} • {locationData.tamil}
+                  Zone: {locationData.zone}
+                  {locationData.zoneTamil && (
+                    <span> • {locationData.zoneTamil}</span>
+                  )}
                 </p>
+                {locationData.areaTamil && (
+                  <p className="text-xs text-orange-600">
+                    {locationData.areaTamil}
+                  </p>
+                )}
               </div>
               <div className="text-xs text-gray-400">
                 Redirecting to your local community...

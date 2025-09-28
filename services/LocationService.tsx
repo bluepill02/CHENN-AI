@@ -1,21 +1,23 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import type { PincodeLocalContent, PincodeProfile } from '../types/pincode';
+import { getPincodeProfile } from './PincodeRepository';
 
 // Types for location data
 export interface LocationData {
   pincode: string;
   area: string;
+  areaTamil?: string;
+  zone: string;
+  zoneTamil?: string;
   district: string;
   state: string;
   latitude?: number;
   longitude?: number;
+  metroCorridors?: string[];
+  serviceZones?: string[];
   verified: boolean;
   timestamp: number;
-  localContent?: {
-    communityName: string;
-    localLanguage: string;
-    culturalElements: string[];
-    nearbyLandmarks: string[];
-  };
+  localContent?: PincodeLocalContent;
 }
 
 export interface LocationContextType {
@@ -29,93 +31,22 @@ export interface LocationContextType {
   setLocationModalOpen: (open: boolean) => void;
 }
 
-// Mock location database - in real implementation, this would be an API call
-const mockLocationDatabase: Record<string, Omit<LocationData, 'verified' | 'timestamp'>> = {
-  '600001': {
-    pincode: '600001',
-    area: 'Parrys Corner',
-    district: 'Chennai',
-    state: 'Tamil Nadu',
-    latitude: 13.0917,
-    longitude: 80.2847,
-    localContent: {
-      communityName: 'George Town Neighborhood',
-      localLanguage: 'Tamil',
-      culturalElements: ['அருள்மிகு வீரமாகாளி அம்மன் கோவில்', 'Kapaleeshwarar Temple'],
-      nearbyLandmarks: ['Chennai Central', 'High Court', 'Government Museum']
-    }
-  },
-  '600002': {
-    pincode: '600002',
-    area: 'Anna Salai',
-    district: 'Chennai',
-    state: 'Tamil Nadu',
-    latitude: 13.0627,
-    longitude: 80.2707,
-    localContent: {
-      communityName: 'Anna Salai Community',
-      localLanguage: 'Tamil',
-      culturalElements: ['Valluvar Kottam', 'Tamil Cultural Center'],
-      nearbyLandmarks: ['LIC Building', 'Gemini Flyover', 'Thousand Lights']
-    }
-  },
-  '600004': {
-    pincode: '600004',
-    area: 'Mylapore',
-    district: 'Chennai',
-    state: 'Tamil Nadu',
-    latitude: 13.0339,
-    longitude: 80.2619,
-    localContent: {
-      communityName: 'Mylapore Heritage Community',
-      localLanguage: 'Tamil',
-      culturalElements: ['கபாலீசுவரர் கோவில்', 'Bharatanatyam Dance Schools'],
-      nearbyLandmarks: ['Kapaleeshwarar Temple', 'Luz Corner', 'Santhome Cathedral']
-    }
-  },
-  '600006': {
-    pincode: '600006',
-    area: 'Chepauk',
-    district: 'Chennai',
-    state: 'Tamil Nadu',
-    latitude: 13.0732,
-    longitude: 80.2609,
-    localContent: {
-      communityName: 'Chepauk Sports Community',
-      localLanguage: 'Tamil',
-      culturalElements: ['MA Chidambaram Stadium', 'Government buildings'],
-      nearbyLandmarks: ['Chepauk Stadium', 'University of Madras', 'Ice House']
-    }
-  },
-  '600020': {
-    pincode: '600020',
-    area: 'T. Nagar',
-    district: 'Chennai',
-    state: 'Tamil Nadu',
-    latitude: 13.0418,
-    longitude: 80.2341,
-    localContent: {
-      communityName: 'T. Nagar Shopping Community',
-      localLanguage: 'Tamil',
-      culturalElements: ['Ranganathan Street', 'South Indian Shopping Culture'],
-      nearbyLandmarks: ['Pondy Bazaar', 'Ranganathan Street', 'Mambalam Railway Station']
-    }
-  },
-  '600028': {
-    pincode: '600028',
-    area: 'Anna Nagar',
-    district: 'Chennai',
-    state: 'Tamil Nadu',
-    latitude: 13.0850,
-    longitude: 80.2101,
-    localContent: {
-      communityName: 'Anna Nagar Residential Community',
-      localLanguage: 'Tamil',
-      culturalElements: ['Anna Nagar Tower Park', 'Modern residential culture'],
-      nearbyLandmarks: ['Anna Nagar Tower', 'Shanti Colony', 'Thirumangalam']
-    }
-  }
-};
+const buildLocationData = (profile: PincodeProfile): LocationData => ({
+  pincode: profile.pincode,
+  area: profile.area.english,
+  areaTamil: profile.area.tamil,
+  zone: profile.zone.english,
+  zoneTamil: profile.zone.tamil,
+  district: profile.district,
+  state: profile.state,
+  latitude: profile.latitude,
+  longitude: profile.longitude,
+  metroCorridors: profile.metroCorridors,
+  serviceZones: profile.serviceZones,
+  localContent: profile.localContent,
+  verified: true,
+  timestamp: Date.now()
+});
 
 const LocationContext = createContext<LocationContextType | null>(null);
 
@@ -140,7 +71,23 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     if (savedCurrentLocation) {
       try {
-        setCurrentLocation(JSON.parse(savedCurrentLocation));
+        const parsed = JSON.parse(savedCurrentLocation) as Partial<LocationData>;
+        const profile = parsed?.pincode ? getPincodeProfile(parsed.pincode) : null;
+        if (profile) {
+          const hydrated = buildLocationData(profile);
+          setCurrentLocation({
+            ...hydrated,
+            timestamp: parsed.timestamp ?? hydrated.timestamp,
+            verified: parsed.verified ?? hydrated.verified,
+          });
+        } else if (parsed?.pincode) {
+          setCurrentLocation({
+            ...parsed,
+            zone: parsed.zone ?? 'Chennai',
+            verified: parsed.verified ?? true,
+            timestamp: parsed.timestamp ?? Date.now(),
+          } as LocationData);
+        }
       } catch (e) {
         console.error('Error parsing saved current location:', e);
       }
@@ -148,7 +95,22 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     if (savedPreviousLocations) {
       try {
-        setPreviousLocations(JSON.parse(savedPreviousLocations));
+        const parsed = JSON.parse(savedPreviousLocations) as Partial<LocationData>[];
+        const hydrated = parsed
+          .map(entry => {
+            if (!entry?.pincode) return null;
+            const profile = getPincodeProfile(entry.pincode);
+            if (!profile) return null;
+            const location = buildLocationData(profile);
+            return {
+              ...location,
+              timestamp: entry.timestamp ?? location.timestamp,
+            } as LocationData;
+          })
+          .filter((value): value is LocationData => Boolean(value));
+        if (hydrated.length) {
+          setPreviousLocations(hydrated);
+        }
       } catch (e) {
         console.error('Error parsing saved previous locations:', e);
       }
@@ -175,20 +137,13 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       
       // In real implementation, this would be an API call to verify pincode
       // and potentially use geolocation API to cross-verify
-      const locationInfo = mockLocationDatabase[pincode];
-      
-      if (!locationInfo) {
+      const profile = getPincodeProfile(pincode);
+
+      if (!profile) {
         throw new Error('Pincode not found or not supported in Chennai area');
       }
 
-      // Simulate location verification (in real app, would use GPS/network location)
-      const locationData: LocationData = {
-        ...locationInfo,
-        verified: true,
-        timestamp: Date.now()
-      };
-
-      return locationData;
+      return buildLocationData(profile);
     } catch (error) {
       throw error;
     } finally {

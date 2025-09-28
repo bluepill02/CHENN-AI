@@ -1,7 +1,5 @@
-import React from 'react';
-import { Home, Store, MessageCircle, User } from 'lucide-react';
-import { IllustratedIcon, ChennaiIcons } from './IllustratedIcon';
 import { useLanguage } from '../services/LanguageService';
+import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
 
 interface BottomNavProps {
   currentScreen: string;
@@ -14,28 +12,24 @@ export function BottomNav({ currentScreen, onScreenChange }: BottomNavProps) {
   const navItems = [
     {
       id: 'home',
-      icon: Home,
       label: t('nav.home', 'Home'),
       illustration: ChennaiIcons.community,
       fallbackEmoji: '🏠'
     },
     {
       id: 'services',
-      icon: Store,
       label: t('nav.services', 'Services'),
       illustration: ChennaiIcons.market,
       fallbackEmoji: '🏪'
     },
     {
       id: 'chat',
-      icon: MessageCircle,
       label: t('nav.chat', 'Chat'),
       illustration: ChennaiIcons.community,
       fallbackEmoji: '💬'
     },
     {
       id: 'profile',
-      icon: User,
       label: t('nav.profile', 'Profile'),
       illustration: ChennaiIcons.family,
       fallbackEmoji: '👤'
@@ -48,7 +42,6 @@ export function BottomNav({ currentScreen, onScreenChange }: BottomNavProps) {
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-400 via-yellow-400 to-orange-400"></div>
       
       {navItems.map((item) => {
-        const IconComponent = item.icon;
         const isActive = currentScreen === item.id;
         
         return (

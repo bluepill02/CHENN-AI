@@ -1,6 +1,6 @@
 import { AutoSharePost, autoSharePosts } from "@/data/autoShare";
+import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { v4 as uuid } from "uuid";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
@@ -10,7 +10,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const expiresAt = new Date(now.getTime() + 30 * 60000); // 30 mins
 
     const post: AutoSharePost = {
-      id: uuid(),
+  id: randomUUID(),
       user,
       from,
       to,

@@ -1,12 +1,10 @@
 import { useExternalData } from '../services/ExternalDataService';
-import { useLanguage } from '../services/LanguageService';
 import { Badge } from './ui/badge';
 import { Card } from './ui/card';
 
 // Debug component to verify WeatherAPI integration
 export function WeatherDebug() {
   const { weather, apiStatus, isLoading, refreshData } = useExternalData();
-  const { language } = useLanguage();
 
   if (!weather) {
     return (

@@ -1,136 +1,171 @@
-import { AlertTriangle, CheckCircle, Info } from 'lucide-react';
-
-interface Alert {
-  id: string;
-  type: 'warning' | 'info' | 'success';
-  title: string;
-  message: string;
-  timestamp: Date;
-  location?: string;
-}
+import { AlertTriangle, CheckCircle, Info, ShieldAlert } from 'lucide-react';
+import type { ReactElement } from 'react';
+import type { LiveAlert } from '../../types/community';
+import { Button } from '../ui/button';
 
 interface LiveAlertsPanelProps {
-  alerts?: Alert[];
-  userLocation?: any;
+  alerts: LiveAlert[];
+  loading?: boolean;
+  error?: string | null;
   className?: string;
+  onAcknowledge?: (alertId: string) => void;
+  emptyMessage?: string;
+  heading?: string | null;
+  showSummary?: boolean;
+  summaryFormatter?: (count: number) => string;
 }
 
-// Location-specific alerts based on pincode
-const getLocationSpecificAlerts = (userLocation: any): Alert[] => {
-  const area = userLocation?.area || 'Chennai';
-  const pincode = userLocation?.pincode;
-  const nearbyLandmarks = userLocation?.localContent?.nearbyLandmarks || [];
-  
-  const locationAlerts: Alert[] = [];
-  
-  // Generate area-specific alerts
-  if (area.includes('T. Nagar')) {
-    locationAlerts.push({
-      id: '1',
-      type: 'warning',
-      title: 'Heavy Traffic Expected',
-      message: `Shopping rush on Ranganathan Street - expect 20+ min delays`,
-      timestamp: new Date(Date.now() - 15 * 60 * 1000),
-      location: 'T. Nagar Shopping District'
-    });
-  } else if (area.includes('Mylapore')) {
-    locationAlerts.push({
-      id: '1',
-      type: 'info',
-      title: 'Temple Festival',
-      message: `Special prayers at Kapaleeshwarar Temple - limited parking`,
-      timestamp: new Date(Date.now() - 45 * 60 * 1000),
-      location: 'Mylapore Temple Area'
-    });
-  } else if (area.includes('Anna Salai')) {
-    locationAlerts.push({
-      id: '1',
-      type: 'warning',
-      title: 'Metro Construction',
-      message: `Phase 2 construction near LIC - expect traffic diversions`,
-      timestamp: new Date(Date.now() - 30 * 60 * 1000),
-      location: 'Anna Salai Metro Route'
-    });
-  }
-  
-  // Add service alerts for the area
-  locationAlerts.push({
-    id: '2',
-    type: 'success',
-    title: 'Water Supply Update',
-    message: `Regular supply restored in ${area} area - ${pincode || 'your pincode'}`,
-    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-    location: area
-  });
-  
-  // Add landmark-specific alerts if available
-  if (nearbyLandmarks.length > 0) {
-    const landmark = nearbyLandmarks[0];
-    locationAlerts.push({
-      id: '3',
-      type: 'info',
-      title: 'Local Update',
-      message: `${landmark} area - increased security patrol during evening hours`,
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-      location: landmark
-    });
-  }
-  
-  return locationAlerts.slice(0, 3); // Limit to 3 alerts
+const severityConfig: Record<LiveAlert['severity'], {
+  icon: ReactElement;
+  badge: string;
+  classes: string;
+}> = {
+  critical: {
+    icon: <ShieldAlert className="w-4 h-4 text-red-600" />,
+    badge: 'Critical',
+    classes: 'border-red-300 bg-red-50/90',
+  },
+  high: {
+    icon: <AlertTriangle className="w-4 h-4 text-orange-600" />,
+    badge: 'High',
+    classes: 'border-orange-300 bg-orange-50/90',
+  },
+  medium: {
+    icon: <Info className="w-4 h-4 text-blue-600" />,
+    badge: 'Medium',
+    classes: 'border-blue-300 bg-blue-50/90',
+  },
+  low: {
+    icon: <CheckCircle className="w-4 h-4 text-emerald-600" />,
+    badge: 'Low',
+    classes: 'border-emerald-300 bg-emerald-50/90',
+  },
 };
 
-export function LiveAlertsPanel({ alerts = [], userLocation, className = '' }: LiveAlertsPanelProps) {
-  const displayAlerts = alerts.length > 0 ? alerts : getLocationSpecificAlerts(userLocation);
+const defaultSummaryFormatter = (count: number) => (count > 0 ? `${count} active` : 'All clear');
 
-  const getAlertIcon = (type: Alert['type']) => {
-    switch (type) {
-      case 'warning':
-        return <AlertTriangle className="w-4 h-4 text-orange-500" />;
-      case 'info':
-        return <Info className="w-4 h-4 text-blue-500" />;
-      case 'success':
-        return <CheckCircle className="w-4 h-4 text-green-500" />;
-    }
-  };
+function formatTimestamp(date: Date): string {
+  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
 
-  const getAlertBgColor = (type: Alert['type']) => {
-    switch (type) {
-      case 'warning':
-        return 'bg-orange-50 border-orange-200';
-      case 'info':
-        return 'bg-blue-50 border-blue-200';
-      case 'success':
-        return 'bg-green-50 border-green-200';
-    }
-  };
+export function LiveAlertsPanel({
+  alerts,
+  loading,
+  error,
+  className = '',
+  onAcknowledge,
+  emptyMessage = 'No active alerts for your area right now.',
+  heading = 'Live Alerts',
+  showSummary = true,
+  summaryFormatter = defaultSummaryFormatter,
+}: LiveAlertsPanelProps) {
+  const hasHeading = heading !== null && heading !== '';
+  const shouldRenderHeader = hasHeading || showSummary;
+  const summaryText = summaryFormatter(alerts.length);
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">Live Alerts</h3>
-      {displayAlerts.map((alert) => (
-        <div
-          key={alert.id}
-          className={`p-3 rounded-lg border ${getAlertBgColor(alert.type)} transition-all duration-200`}
-        >
-          <div className="flex items-start gap-3">
-            {getAlertIcon(alert.type)}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <h4 className="text-sm font-medium text-gray-800">{alert.title}</h4>
-                <span className="text-xs text-gray-500">
-                  {alert.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
-              <p className="text-sm text-gray-600 mb-1">{alert.message}</p>
-              {alert.location && (
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                  📍 {alert.location}
-                </span>
-              )}
-            </div>
-          </div>
+      {shouldRenderHeader && (
+        <div className="mb-2 flex items-center justify-between">
+          {hasHeading ? (
+            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <ShieldAlert className="w-5 h-5 text-orange-500" />
+              {heading}
+            </h3>
+          ) : (
+            <span />
+          )}
+          {showSummary && (
+            <span className="text-xs text-gray-500">{summaryText}</span>
+          )}
         </div>
-      ))}
+      )}
+
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50/80 px-3 py-2 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="space-y-2">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-16 animate-pulse rounded-lg border border-orange-100 bg-orange-50/60"
+            />
+          ))}
+        </div>
+      )}
+
+      {!loading && alerts.length === 0 && !error && (
+        <div className="rounded-lg border border-dashed border-gray-300 bg-white/70 px-4 py-6 text-center text-sm text-gray-600">
+          {emptyMessage}
+        </div>
+      )}
+
+      {!loading &&
+        alerts.map(alert => {
+          const config = severityConfig[alert.severity];
+          return (
+            <div
+              key={alert.id}
+              className={`rounded-xl border px-4 py-3 shadow-sm transition-all hover:shadow-md ${config.classes}`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/70">
+                  {config.icon}
+                </div>
+                <div className="flex-1 min-w-0 space-y-1">
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900">
+                        {alert.title}
+                      </h4>
+                      <p className="text-xs text-gray-500">
+                        {alert.title !== alert.titleEn ? alert.titleEn : alert.messageEn}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span className="rounded-full bg-white/60 px-2 py-0.5 font-medium text-gray-700">
+                        {config.badge}
+                      </span>
+                      <span>{formatTimestamp(alert.timestamp)}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700">{alert.message}</p>
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
+                    {alert.source && (
+                      <span className="rounded-full bg-white/70 px-2 py-1 font-medium text-gray-700">
+                        📡 {alert.source}
+                      </span>
+                    )}
+                    {alert.affectedAreas?.map(area => (
+                      <span key={area} className="rounded-full bg-white/70 px-2 py-1">
+                        📍 {area}
+                      </span>
+                    ))}
+                    {alert.pincodes?.map(code => (
+                      <span key={code} className="rounded-full bg-white/50 px-2 py-1">
+                        PIN {code}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                {onAcknowledge && alert.isActive && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-white/60 bg-white/70 text-gray-700 hover:bg-white"
+                    onClick={() => onAcknowledge(alert.id)}
+                  >
+                    Mark read
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        })}
     </div>
   );
 }

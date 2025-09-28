@@ -1,10 +1,10 @@
 import {
-  Activity,
-  AlertTriangle,
-  Clock,
-  MapPin,
-  Navigation,
-  RefreshCw
+    Activity,
+    AlertTriangle,
+    Clock,
+    MapPin,
+    Navigation,
+    RefreshCw
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '../../services/LanguageService';
@@ -21,6 +21,8 @@ export interface TrafficPanelProps {
   zoom?: number;
   /** Additional CSS classes for styling overrides */
   className?: string;
+  /** Optional pincode for context */
+  pincode?: string;
 }
 
 /**
@@ -49,8 +51,10 @@ interface TrafficData {
 export function TrafficPanel({ 
   center = { lat: 13.0827, lng: 80.2707 }, // Chennai coordinates
   zoom = 12,
-  className = '' 
+  className = '',
+  pincode
 }: TrafficPanelProps) {
+  void pincode;
   const { language } = useLanguage();
   const [trafficData, setTrafficData] = useState<TrafficData | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -41,6 +41,7 @@
 // NEW: Integrates with existing ExternalDataService for seamless bus data access
 
 import { NormalizedBusData, BusApiResponse } from '../pages/api/bus';
+import React from 'react';
 
 // NEW: Bus service configuration
 const BUS_API_CONFIG = {
@@ -290,5 +291,4 @@ export const BusDataContext = React.createContext<{
   refresh: async () => {}
 });
 
-// NEW: Import React for the hook
-import React from 'react';
+// React is imported at the top of the file

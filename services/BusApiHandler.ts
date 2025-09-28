@@ -133,6 +133,10 @@ class ChaloApiFetcher {
       const routeTamil = this.getRouteTamil(routeNumber);
 
       return {
+        area: {
+          en: area,
+          ta: areaTamil
+        },
         type: "traffic",
         category: "bus",
         location: {
@@ -221,6 +225,10 @@ class ChaloApiFetcher {
     ];
 
     return mockData.map(mock => ({
+      area: {
+        en: mock.area,
+        ta: this.getAreaTamil(mock.area)
+      },
       type: "traffic",
       category: "bus",
       location: {

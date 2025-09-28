@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Launch Vite App",
+      "url": "http://localhost:${input:devServerPort}",
+      "webRoot": "${workspaceFolder}/CHENN-AI",
+      "preLaunchTask": "npm: dev (CHENN-AI)"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "devServerPort",
+      "type": "promptString",
+      "description": "Enter the port number your Vite dev server uses (e.g. 5173)"
+    }
+  ]
+}

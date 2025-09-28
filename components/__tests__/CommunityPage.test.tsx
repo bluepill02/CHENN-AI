@@ -42,6 +42,8 @@ jest.mock('../ui/input', () => ({
 jest.mock('lucide-react', () => ({
   AlertCircle: () => <span>AlertCircle</span>,
   CheckCircle: () => <span>CheckCircle</span>,
+  ChevronDown: () => <span>ChevronDown</span>,
+  ChevronUp: () => <span>ChevronUp</span>,
   Clock: () => <span>Clock</span>,
   Cloud: () => <span>Cloud</span>,
   CloudRain: () => <span>CloudRain</span>,
@@ -210,37 +212,56 @@ describe('CommunityPage', () => {
   });
 
   describe('Layout Structure', () => {
-    it('should render with correct grid layout classes', () => {
+    it('should render responsive layout wrappers', () => {
       renderCommunityPageWithProviders();
-      
-      const rootContainer = screen.getByTestId('community-feed').parentElement?.parentElement;
-      expect(rootContainer).toHaveClass('grid');
-      expect(rootContainer).toHaveClass('lg:grid-cols-3');
-      expect(rootContainer).toHaveClass('grid-cols-1');
-      expect(rootContainer).toHaveClass('h-screen');
+
+      const feedElement = screen.getByTestId('community-feed');
+      const feedContainer = feedElement.parentElement as HTMLElement;
+      const layoutWrapper = feedContainer.parentElement as HTMLElement;
+      const rootContainer = layoutWrapper.parentElement as HTMLElement;
+
+      expect(layoutWrapper).toHaveClass('flex');
+      expect(layoutWrapper).toHaveClass('flex-col');
+      expect(layoutWrapper).toHaveClass('lg:grid');
+      expect(layoutWrapper.className).toContain('lg:grid-cols-[minmax(0,1fr)_360px]');
+
+      expect(rootContainer).toHaveClass('h-full');
+      expect(rootContainer).toHaveClass('bg-gradient-to-br');
+      expect(rootContainer).toHaveClass('from-orange-50');
+      expect(rootContainer).toHaveClass('via-yellow-25');
+      expect(rootContainer).toHaveClass('to-orange-25');
     });
 
-    it('should have feed container with correct column span', () => {
+    it('should keep feed column scrollable', () => {
       renderCommunityPageWithProviders();
-      
-      const feedContainer = screen.getByTestId('community-feed').parentElement;
-      expect(feedContainer).toHaveClass('lg:col-span-2');
+
+      const feedContainer = screen.getByTestId('community-feed').parentElement as HTMLElement;
+      expect(feedContainer).toHaveClass('h-full');
+      expect(feedContainer).toHaveClass('overflow-y-auto');
     });
 
-    it('should have widget container with correct column span', () => {
+    it('should render live data column inside sticky aside', () => {
       renderCommunityPageWithProviders();
-      
-      const widgetContainer = screen.getByTestId('live-data-widget').parentElement;
-      expect(widgetContainer).toHaveClass('lg:col-span-1');
+
+      const liveDataElement = screen.getByTestId('live-data-widget');
+      const widgetAside = liveDataElement.closest('aside');
+      expect(widgetAside).not.toBeNull();
+      expect(widgetAside).toHaveClass('hidden');
+      expect(widgetAside).toHaveClass('lg:flex');
+      expect(widgetAside).toHaveClass('h-full');
+
+      const stickyContainer = liveDataElement.parentElement as HTMLElement;
+      expect(stickyContainer).toHaveClass('sticky');
+      expect(stickyContainer).toHaveClass('top-4');
+      expect(stickyContainer).toHaveClass('border');
+      expect(stickyContainer.className).toContain('border-orange-100/70');
     });
 
-    it('should have proper visual separation with border', () => {
+    it('should pass scrollable class down to live data widget', () => {
       renderCommunityPageWithProviders();
-      
-      const widgetContainer = screen.getByTestId('live-data-widget').parentElement;
-      expect(widgetContainer).toHaveClass('border-l-2');
-      expect(widgetContainer).toHaveClass('border-orange-200');
-      expect(widgetContainer).toHaveClass('pl-4');
+
+      const liveDataElement = screen.getByTestId('live-data-widget');
+      expect(liveDataElement).toHaveClass('overflow-y-auto');
     });
   });
 
@@ -248,21 +269,24 @@ describe('CommunityPage', () => {
     it('should have overflow-y-auto on both containers', () => {
       renderCommunityPageWithProviders();
       
-      const feedContainer = screen.getByTestId('community-feed').parentElement;
-      const widgetContainer = screen.getByTestId('live-data-widget').parentElement;
+      const feedContainer = screen.getByTestId('community-feed').parentElement as HTMLElement;
+      const liveDataElement = screen.getByTestId('live-data-widget');
       
       expect(feedContainer).toHaveClass('overflow-y-auto');
-      expect(widgetContainer).toHaveClass('overflow-y-auto');
+      expect(liveDataElement).toHaveClass('overflow-y-auto');
     });
 
     it('should maintain independent heights for scrolling', () => {
       renderCommunityPageWithProviders();
       
-      const feedContainer = screen.getByTestId('community-feed').parentElement;
-      const widgetContainer = screen.getByTestId('live-data-widget').parentElement;
+      const feedContainer = screen.getByTestId('community-feed').parentElement as HTMLElement;
+      const widgetAside = screen.getByTestId('live-data-widget').closest('aside');
+      expect(widgetAside).not.toBeNull();
+      const stickyContainer = screen.getByTestId('live-data-widget').parentElement as HTMLElement;
       
-      expect(feedContainer).toHaveClass('h-screen');
-      expect(widgetContainer).toHaveClass('h-screen');
+      expect(feedContainer).toHaveClass('h-full');
+      expect(widgetAside as HTMLElement).toHaveClass('h-full');
+      expect(stickyContainer.className).toContain('h-[calc(100vh-2rem)]');
     });
 
     it('should allow independent scrolling without affecting other column', async () => {
@@ -332,20 +356,17 @@ describe('CommunityPage', () => {
         pincode: '600002'
       });
       
-      expect(CommunityFeedMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          userLocation: { area: 'Custom Area', pincode: '600002' },
-          pincode: '600002'
-        }),
-        expect.anything()
-      );
-      
-      expect(LiveDataWidgetMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          className: 'h-full'
-        }),
-        expect.anything()
-      );
+      const [feedCall] = CommunityFeedMock.mock.calls;
+      const [widgetCall] = LiveDataWidgetMock.mock.calls;
+
+      expect(feedCall[0]).toMatchObject({
+        userLocation: { area: 'Custom Area', pincode: '600002' },
+      });
+
+      expect(widgetCall[0]).toMatchObject({
+        className: 'overflow-y-auto',
+        pincode: '600002',
+      });
     });
   });
 
@@ -371,29 +392,27 @@ describe('CommunityPage', () => {
       mockMatchMedia(768); // Mobile viewport
       renderCommunityPageWithProviders();
       
-      const rootContainer = screen.getByTestId('community-feed').parentElement?.parentElement;
-      expect(rootContainer).toHaveClass('grid-cols-1');
-      
-      // On mobile, should still have the same structure but different layout
-      const feedContainer = screen.getByTestId('community-feed').parentElement;
-      const widgetContainer = screen.getByTestId('live-data-widget').parentElement;
-      
-      expect(feedContainer).toBeInTheDocument();
-      expect(widgetContainer).toBeInTheDocument();
+      const feedContainer = screen.getByTestId('community-feed').parentElement as HTMLElement;
+      const layoutWrapper = feedContainer.parentElement as HTMLElement;
+      const mobileWidgetToggle = screen.getByRole('button', { name: /live data/i });
+
+      expect(layoutWrapper).toHaveClass('flex');
+      expect(layoutWrapper).toHaveClass('flex-col');
+      expect(mobileWidgetToggle.closest('div')).toHaveClass('lg:hidden');
     });
 
     it('should display side-by-side on desktop viewport', () => {
       mockMatchMedia(1200); // Desktop viewport
       renderCommunityPageWithProviders();
       
-      const rootContainer = screen.getByTestId('community-feed').parentElement?.parentElement;
-      expect(rootContainer).toHaveClass('lg:grid-cols-3');
-      
-      const feedContainer = screen.getByTestId('community-feed').parentElement;
-      const widgetContainer = screen.getByTestId('live-data-widget').parentElement;
-      
-      expect(feedContainer).toHaveClass('lg:col-span-2');
-      expect(widgetContainer).toHaveClass('lg:col-span-1');
+      const feedContainer = screen.getByTestId('community-feed').parentElement as HTMLElement;
+      const layoutWrapper = feedContainer.parentElement as HTMLElement;
+      const widgetAside = screen.getByTestId('live-data-widget').closest('aside');
+      expect(widgetAside).not.toBeNull();
+
+      expect(layoutWrapper).toHaveClass('lg:grid');
+      expect(layoutWrapper.className).toContain('lg:grid-cols-[minmax(0,1fr)_360px]');
+      expect(widgetAside as HTMLElement).toHaveClass('lg:flex');
     });
   });
 
@@ -438,7 +457,10 @@ describe('CommunityPage', () => {
     it('should apply gradient background', () => {
       renderCommunityPageWithProviders();
       
-      const rootContainer = screen.getByTestId('community-feed').parentElement?.parentElement;
+      const feedElement = screen.getByTestId('community-feed');
+      const layoutWrapper = feedElement.parentElement?.parentElement as HTMLElement;
+      const rootContainer = layoutWrapper.parentElement as HTMLElement;
+
       expect(rootContainer).toHaveClass('bg-gradient-to-br');
       expect(rootContainer).toHaveClass('from-orange-50');
       expect(rootContainer).toHaveClass('via-yellow-25');
@@ -448,7 +470,9 @@ describe('CommunityPage', () => {
     it('should accept custom className prop', () => {
       renderCommunityPageWithProviders({ className: 'custom-class' });
       
-      const rootContainer = screen.getByTestId('community-feed').parentElement?.parentElement;
+      const feedElement = screen.getByTestId('community-feed');
+      const layoutWrapper = feedElement.parentElement?.parentElement as HTMLElement;
+      const rootContainer = layoutWrapper.parentElement as HTMLElement;
       expect(rootContainer).toHaveClass('custom-class');
     });
   });

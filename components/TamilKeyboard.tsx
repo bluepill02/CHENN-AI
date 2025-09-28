@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { Delete, Globe, Keyboard } from 'lucide-react';
+import { useState } from 'react';
+import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
-import { Badge } from './ui/badge';
-import { Keyboard, Globe, Delete } from 'lucide-react';
 
 interface TamilKeyboardProps {
   onTextChange: (text: string) => void;

@@ -2,9 +2,10 @@
 import { Ride, User } from "./autoShareInterfaces";
 
 const mockUsers: User[] = [
-  { id: "u1", name: "Arun Kumar", avatarUrl: "https://example.com/avatar1.png" },
-  { id: "u2", name: "Priya Sharma" },
-  { id: "u3", name: "Vikram Raj", avatarUrl: "https://example.com/avatar3.png" },
+  { id: "u1", name: "Arun Kumar அருண் குமார்", avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" },
+  { id: "u2", name: "Priya Sharma பிரியா ஷர்மா" },
+  { id: "u3", name: "Vikram Raj விக்ரம் ராஜ்", avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" },
+  { id: "u4", name: "Divya Krishnan தி வ்யா கிருஷ்ணன்", avatarUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b601?w=100" },
 ];
 
 export const mockRides: Ride[] = [
@@ -33,7 +34,7 @@ export const mockRides: Ride[] = [
   {
     id: "r3",
     pickup: "Adyar / அடையார்",
-    drop: "OMR / ஓஎம்ஆர்",
+    drop: "OMR IT Corridor / ஓஎம்ஆர் ஐடி தொழிற்சாலை",
     time: "2025-09-22T09:00:00Z",
     fare: 200,
     seatsTotal: 4,
@@ -73,5 +74,27 @@ export const mockRides: Ride[] = [
     seatsAvailable: 1,
     creator: mockUsers[2],
     status: "completed",
+  },
+  {
+    id: "r7",
+    pickup: "Egmore / எழும்பூர்",
+    drop: "Nungambakkam / நுங்கம்பாக்கம்",
+    time: "2025-09-19T14:20:00Z",
+    fare: 90,
+    seatsTotal: 3,
+    seatsAvailable: 0,
+    creator: mockUsers[3],
+    status: "cancelled",
+  },
+  {
+    id: "r8",
+    pickup: "Porur / போரூர்",
+    drop: "Koyambedu / கோயம்பேடு",
+    time: "2025-09-24T17:00:00Z",
+    fare: 110,
+    seatsTotal: 4,
+    seatsAvailable: 1,
+    creator: mockUsers[3],
+    status: "upcoming",
   },
 ];

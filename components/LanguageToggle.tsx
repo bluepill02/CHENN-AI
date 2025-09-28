@@ -1,11 +1,10 @@
-import React from 'react';
-import { useLanguage, Language } from '../services/LanguageService';
 import { Globe } from 'lucide-react';
+import { Language, useLanguage } from '../services/LanguageService';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 
 export function LanguageToggle() {

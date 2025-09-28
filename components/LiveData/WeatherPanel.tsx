@@ -20,6 +20,8 @@ import { Card } from '../ui/card';
 export interface WeatherPanelProps {
   /** Additional CSS classes for styling overrides */
   className?: string;
+  /** Optional pincode context for display */
+  pincode?: string;
 }
 
 /**
@@ -32,7 +34,7 @@ export interface WeatherPanelProps {
  * - Accessible weather icons and labels
  * - Hover animations and responsive design
  */
-export function WeatherPanel({ className = '' }: WeatherPanelProps) {
+export function WeatherPanel({ className = '', pincode }: WeatherPanelProps) {
   const { language } = useLanguage();
   const { 
     weather, 
@@ -203,6 +205,11 @@ export function WeatherPanel({ className = '' }: WeatherPanelProps) {
               <div className="text-xs text-gray-500 dark:text-gray-500">
                 {language === 'ta' || language === 'ta-rom' ? 'தமிழ்நாடு' : 'Tamil Nadu'}
               </div>
+              {pincode && (
+                <div className="text-xs text-gray-400 dark:text-gray-500">
+                  {language === 'ta' || language === 'ta-rom' ? `அஞ்சல் குறியீடு: ${pincode}` : `PIN: ${pincode}`}
+                </div>
+              )}
             </div>
           </div>
 

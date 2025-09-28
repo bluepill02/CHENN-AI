@@ -1,9 +1,7 @@
-import React from 'react';
-import { Card } from './ui/card';
+import { Heart, MapPin, MessageCircle, Sparkles, Star, Trophy, Users } from 'lucide-react';
 import { Badge } from './ui/badge';
-import { Button } from './ui/button';
+import { Card } from './ui/card';
 import { Progress } from './ui/progress';
-import { Star, Trophy, Heart, Users, MapPin, MessageCircle, Sparkles } from 'lucide-react';
 
 interface Achievement {
   id: string;

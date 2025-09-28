@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import image_3517c13818645a7fbda74d51f10c38a0291a99d7 from '../assets/3517c13818645a7fbda74d51f10c38a0291a99d7.png';
 
 interface IllustratedIconProps {
@@ -17,6 +18,8 @@ export function IllustratedIcon({
   fallbackEmoji = '🏛️',
   style = 'circular'
 }: IllustratedIconProps) {
+  const [hasError, setHasError] = useState(false);
+
   const sizeClasses = {
     sm: 'w-8 h-8',
     md: 'w-12 h-12',
@@ -32,7 +35,18 @@ export function IllustratedIcon({
 
   return (
     <div className={`${sizeClasses[size]} ${styleClasses[style]} overflow-hidden bg-gradient-to-br from-orange-100 to-yellow-100 flex items-center justify-center shadow-sm ${className}`}>
-      
+      {!hasError && src ? (
+        <img
+          src={src}
+          alt={alt}
+          className="w-full h-full object-cover"
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <span aria-hidden="true" className="text-2xl">
+          {fallbackEmoji}
+        </span>
+      )}
     </div>
   );
 }

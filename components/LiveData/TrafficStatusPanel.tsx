@@ -9,12 +9,20 @@ interface TrafficData {
 
 interface TrafficStatusPanelProps {
   trafficData?: TrafficData[];
-  userLocation?: any;
+  userLocation?: UserLocation;
   className?: string;
 }
 
+interface UserLocation {
+  pincode?: string;
+  area?: string;
+  localContent?: {
+    nearbyLandmarks?: string[];
+  };
+}
+
 // Location-specific traffic data based on pincode
-const getLocationSpecificTraffic = (userLocation: any): TrafficData[] => {
+const getLocationSpecificTraffic = (userLocation?: UserLocation): TrafficData[] => {
   if (!userLocation?.pincode) {
     return [
       {
@@ -47,7 +55,7 @@ const getLocationSpecificTraffic = (userLocation: any): TrafficData[] => {
   });
 
   // Add nearby landmarks traffic
-  nearbyLandmarks.slice(0, 2).forEach(landmark => {
+  nearbyLandmarks.slice(0, 2).forEach((landmark: string) => {
     locationTraffic.push({
       location: landmark,
       status: Math.random() > 0.7 ? 'heavy' : Math.random() > 0.4 ? 'moderate' : 'light',

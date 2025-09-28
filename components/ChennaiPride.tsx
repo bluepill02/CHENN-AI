@@ -1,7 +1,5 @@
-import React from 'react';
-import { Card } from './ui/card';
 import { Badge } from './ui/badge';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { Card } from './ui/card';
 
 export function ChennaiPride() {
   const prideFeatures = [
