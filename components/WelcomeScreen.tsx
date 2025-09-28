@@ -14,7 +14,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
   const { t } = useLanguage();
   
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 relative max-w-md mx-auto">
       {/* Language Toggle */}
       <div className="absolute top-6 right-6 z-20">
         <LanguageToggle />
@@ -22,10 +22,10 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
       
       {/* Beautiful Chennai cityscape background inspired by the uploaded illustration */}
       <div
-        className="absolute inset-0 pointer-events-none bg-center bg-cover bg-no-repeat opacity-50"
+        className="absolute inset-0 pointer-events-none bg-center bg-contain bg-no-repeat opacity-30"
         style={{
           backgroundImage: `url(${image_b8fc04d1057e4c07909ad75c346def9f8f3687d7})`,
-          backgroundSize: 'cover',
+          backgroundSize: 'contain',
           backgroundPosition: 'center',
         }}
         aria-hidden={true}

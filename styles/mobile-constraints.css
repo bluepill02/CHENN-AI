@@ -1,0 +1,72 @@
+/* Mobile App Layout Constraints */
+
+/* Ensure the entire app stays within mobile bounds */
+html {
+  overflow-x: hidden;
+}
+
+body {
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+  overflow-x: hidden;
+  background: #f9fafb;
+}
+
+/* Prevent any element from exceeding viewport width */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Image constraints to prevent oversizing */
+img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Background image constraints */
+[style*="background-image"] {
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+}
+
+/* Override any background-size: cover */
+.bg-cover {
+  background-size: contain !important;
+}
+
+/* Container constraints for main app areas */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+/* Prevent horizontal scrolling */
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+/* Mobile-first responsive images */
+.responsive-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Ensure icons stay reasonable size */
+.icon-container img {
+  max-width: 48px !important;
+  max-height: 48px !important;
+  object-fit: contain !important;
+}
+
+/* Fix any stretched components */
+.full-width-stretch {
+  max-width: 480px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}

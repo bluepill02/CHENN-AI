@@ -40,9 +40,9 @@ function MainAppContent({ userLocation }: MainAppProps) {
   };
 
   return (
-    <div className="w-full h-screen flex flex-col">
+    <div className="w-full h-screen max-w-md mx-auto flex flex-col bg-white">
       {/* Main content area - Full height minus bottom navigation */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         {renderScreen()}
       </div>
       

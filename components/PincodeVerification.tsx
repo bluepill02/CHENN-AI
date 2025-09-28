@@ -42,7 +42,7 @@ export function PincodeVerification({ onVerificationComplete, onSkip }: PincodeV
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-300 to-yellow-400 flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-orange-400 via-orange-300 to-yellow-400 flex flex-col items-center justify-center px-6 relative max-w-md mx-auto">
       {/* Language Toggle */}
       <div className="absolute top-6 right-6 z-20">
         <LanguageToggle />
@@ -53,7 +53,7 @@ export function PincodeVerification({ onVerificationComplete, onSkip }: PincodeV
         <ImageWithFallback
           src={chennaiWaterfront}
           alt="Chennai Waterfront"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain"
         />
       </div>
       

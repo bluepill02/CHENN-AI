@@ -59,8 +59,8 @@ export default function App() {
         <LocationProvider>
           <PincodeContextProvider>
             <Router>
-              <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-25 relative overflow-hidden">
-                <div className="relative z-10">
+              <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-25 relative">
+                <div className="relative z-10 max-w-md mx-auto">
                   {currentScreen === 'welcome' && (
                     <Suspense fallback={renderLoader('Preparing your Chennai welcome...')}>
                       <WelcomeScreen onContinue={handleWelcomeContinue} />
