@@ -1,17 +1,17 @@
 import {
-    Check,
-    ChevronRight,
-    CircleOff,
-    Clock,
-    Heart,
-    MapPin,
-    RefreshCcw,
-    ShieldCheck,
-    Sparkles,
-    Star,
-    TrendingUp,
-    Users,
-    X,
+  Check,
+  ChevronRight,
+  CircleOff,
+  Clock,
+  Heart,
+  MapPin,
+  RefreshCcw,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  TrendingUp,
+  Users,
+  X,
 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,14 +21,12 @@ import ProfileBackdrop from '../Figma Exports/Frame 4.png';
 import { useLanguage } from '../services/LanguageService';
 import { useLocation } from '../services/LocationService';
 import {
-    useProfileDashboard,
-    type AchievementSummary,
-    type ActivityItem,
-    type RecommendationItem,
+  useProfileDashboard,
+  type AchievementSummary,
+  type ActivityItem,
+  type RecommendationItem,
 } from '../services/ProfileDashboardService';
 import { AchievementBadges } from './AchievementBadges';
-import { AppHealthCheck } from './AppHealthCheck';
-import DeploymentReadiness from './DeploymentReadiness';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
 import { LanguageToggle } from './LanguageToggle';
@@ -271,17 +269,32 @@ export function ProfileScreen() {
   );
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-orange-50 to-yellow-25">
-      <div className="pointer-events-none fixed inset-0 opacity-15 md:opacity-10">
-        <ImageWithFallback src={ProfileBackdrop} alt="Chennai profile gradient" className="h-full w-full object-cover" />
+    <div className="relative min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
+      {/* Enhanced background with multiple layers */}
+      <div className="pointer-events-none fixed inset-0">
+        {/* Primary gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-teal-500/5"></div>
+        
+        {/* Pattern overlay for texture */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59,130,246,0.3) 1px, transparent 0)`,
+          backgroundSize: '24px 24px'
+        }}></div>
+        
+        {/* Chennai-themed backdrop with better opacity */}
+        <ImageWithFallback 
+          src={ProfileBackdrop} 
+          alt="Chennai profile gradient" 
+          className="h-full w-full object-cover opacity-[0.08] mix-blend-overlay" 
+        />
       </div>
 
       <div className="relative z-10 pb-20">
-        <header className="rounded-b-[2rem] bg-gradient-to-r from-orange-400 to-orange-500 px-6 py-8 shadow-sm">
+        <header className="rounded-b-[2rem] bg-gradient-to-r from-blue-600 to-indigo-700 px-6 py-8 shadow-lg backdrop-blur-sm border-b border-white/10">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex flex-1 gap-4">
-              <Avatar className="h-20 w-20 shadow-lg shadow-orange-300/40">
-                <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 text-2xl font-bold text-white">
+              <Avatar className="h-20 w-20 shadow-lg shadow-blue-300/40 border-2 border-white/20">
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-2xl font-bold text-white">
                   {(profile?.name ?? 'Chennai Citizen')
                     .split(' ')
                     .map((segment) => segment[0])
@@ -383,7 +396,7 @@ export function ProfileScreen() {
 
         <nav className="px-6 pt-5">
           <div className="flex flex-wrap gap-2 rounded-2xl bg-orange-100 p-1">
-            {[{ key: 'overview', label: 'Overview', emoji: '🏡' }, { key: 'achievements', label: 'Achievements', emoji: '🏆' }, { key: 'activity', label: 'Activity', emoji: '📅' }, { key: 'status', label: 'App Status', emoji: '🚀' }].map(
+            {[{ key: 'overview', label: 'Overview', emoji: '🏡' }, { key: 'achievements', label: 'Achievements', emoji: '🏆' }, { key: 'activity', label: 'Activity', emoji: '📅' }].map(
               ({ key, label, emoji }) => (
                 <Button
                   key={key}
@@ -713,12 +726,7 @@ export function ProfileScreen() {
           </div>
         )}
 
-        {activeTab === 'status' && (
-          <div className="space-y-4 px-6 pt-6">
-            <AppHealthCheck />
-            <DeploymentReadiness />
-          </div>
-        )}
+
 
         <div className="px-6 pt-6">
           <h3 className="mb-3 text-sm font-semibold text-gray-700">{t('profile.manageAccount', 'Manage account')}</h3>

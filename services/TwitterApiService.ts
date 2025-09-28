@@ -227,13 +227,16 @@ class TwitterApiService {
   // Get current API usage stats for monitoring
   getApiUsageStats(): ApiUsageStats {
     const now = Date.now();
+    // Calculate remaining window time
     const windowRemainingMs = this.RATE_WINDOW - (now - this.rateLimitInfo.windowStart);
     
     return {
       totalRequests: this.rateLimitInfo.requestCount,
       remainingRequests: Math.max(0, this.RATE_LIMIT - this.rateLimitInfo.requestCount),
       windowReset: this.rateLimitInfo.windowStart + this.RATE_WINDOW,
-      lastUsed: new Date(this.rateLimitInfo.lastRequest).toLocaleTimeString()
+      lastUsed: new Date(this.rateLimitInfo.lastRequest).toLocaleTimeString(),
+      // Log window remaining time for debugging
+      ...(windowRemainingMs > 0 && { debug: `Window resets in ${Math.ceil(windowRemainingMs / 1000)}s` })
     };
   }
 

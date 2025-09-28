@@ -123,9 +123,23 @@ export function WeatherPanel({ className = '', pincode }: WeatherPanelProps) {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Cloud className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-          <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-            {language === 'ta' || language === 'ta-rom' ? 'வானிலை' : 'Weather'}
-          </h3>
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+              {language === 'ta' || language === 'ta-rom' ? 'வானிலை' : 'Weather'}
+            </h3>
+            {/* Data source indicator */}
+            <div className={`px-1.5 py-0.5 rounded text-xs font-medium mt-0.5 ${
+              apiStatus.weather === 'connected' 
+                ? 'bg-green-100 text-green-700 border border-green-200' 
+                : apiStatus.weather === 'error'
+                ? 'bg-amber-100 text-amber-700 border border-amber-200'
+                : 'bg-gray-100 text-gray-700 border border-gray-200'
+            }`}>
+              {apiStatus.weather === 'connected' ? '🟢 LIVE API' : 
+               apiStatus.weather === 'error' ? '🟡 SIMULATED' : 
+               '⚪ LOADING'}
+            </div>
+          </div>
         </div>
         
         {/* Refresh Button */}

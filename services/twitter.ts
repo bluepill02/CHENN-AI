@@ -1,6 +1,6 @@
 const BEARER = import.meta.env.VITE_TWITTER_BEARER_TOKEN;
-const API_KEY = import.meta.env.VITE_TWITTER_API_KEY;
-const API_SECRET = import.meta.env.VITE_TWITTER_API_SECRET;
+// const API_KEY = import.meta.env.VITE_TWITTER_API_KEY;
+// const API_SECRET = import.meta.env.VITE_TWITTER_API_SECRET;
 
 export interface NormalizedTweet {
   id: string;

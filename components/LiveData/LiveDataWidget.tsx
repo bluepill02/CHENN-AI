@@ -1,9 +1,9 @@
 import {
-  AlertTriangle,
-  Clock,
-  RefreshCw,
-  Wifi,
-  WifiOff,
+    AlertTriangle,
+    Clock,
+    RefreshCw,
+    Wifi,
+    WifiOff,
 } from 'lucide-react';
 import { useExternalData } from '../../services/ExternalDataService';
 import { useLanguage } from '../../services/LanguageService';
@@ -14,6 +14,7 @@ import { Card } from '../ui/card';
 
 // Import sub-components (some may need to be created)
 import BusByPincodeCard from '../BusByPincodeCard';
+import PublicServicesCard from '../PublicServicesCard';
 import TimetableCard from '../TimetableCard';
 import { TrafficStatusPanel } from './TrafficStatusPanel';
 import { WeatherPanel } from './WeatherPanel';
@@ -57,7 +58,6 @@ export function LiveDataWidget({
   } = useRealTimeData();
 
   const { 
-    publicServices,
     isLoading,
     refreshData
   } = useExternalData();
@@ -219,17 +219,12 @@ export function LiveDataWidget({
                 <TempleInfoPanel pincode={pincode} />
               </Card> */}
 
-              {/* Public Services Status */}
-              {publicServices && publicServices.length > 0 && (
-                <Card className="p-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-[1.02]">
-                    <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 mb-2">
-                      {getText('publicServices', 'Public Services')}
-                    </h4>
-                    <div className="text-xs text-gray-600 dark:text-gray-400">
-                      {publicServices.length} {getText('servicesAvailable', 'services available')}
-                    </div>
-                </Card>
-              )}
+              {/* Public Services Card */}
+              <Card className="p-4 rounded-lg shadow-md transform transition-all duration-200 hover:scale-[1.02]">
+                <PublicServicesCard 
+                  pincode={pincode}
+                />
+              </Card>
             </>
           )}
 

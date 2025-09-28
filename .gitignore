@@ -3,6 +3,8 @@
 # scripts cache
 scripts/.geocache.json
 .env.local
+.env.development.local
+.env.test.local
 
 # Node dependencies
 node_modules/
@@ -27,3 +29,4 @@ yarn-error.log*
 # Environment files
 .env*
 node_modules
+.vercel

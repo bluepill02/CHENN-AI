@@ -9,11 +9,9 @@ import { useLocation } from '../services/LocationService';
 import { getRelativeTime, getRelativeTimeTamil, useRealTimeData } from '../services/RealTimeDataService';
 import { getUser, UserProfile } from '../src/services/UserService';
 import type { LivePost } from '../types/community';
-import { EnhancedTwitterFeed } from './EnhancedTwitterFeed';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ChennaiIcons, IllustratedIcon } from './IllustratedIcon';
 import { LanguageToggle } from './LanguageToggle';
-import { ApiStatusIndicator } from './Shared';
 import { Avatar } from './ui/avatar';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
@@ -1240,7 +1238,6 @@ export function CommunityFeed({ userLocation }: CommunityFeedProps) {
                 <span>{t('feed.status.error', "Trouble reaching the community feed. We'll keep trying!")}</span>
               )}
             </div>
-            <ApiStatusIndicator className="text-white/80" />
           </div>
         </div>
       </header>
@@ -1352,20 +1349,7 @@ export function CommunityFeed({ userLocation }: CommunityFeedProps) {
         </Card>
       </section>
 
-      {/* Strategic Twitter Feed Section - Optimized for Free Tier */}
-      <div className="px-6 mb-6">
-        <EnhancedTwitterFeed 
-          pincode={activeLocation?.pincode}
-          category="community"
-          maxTweets={3}
-          showMetrics={false}
-        />
-        <div className="mt-2 text-center">
-          <div className="text-xs text-gray-500 bg-blue-50 rounded-lg p-2">
-            📡 Live Chennai updates via Twitter API • Cached for efficiency
-          </div>
-        </div>
-      </div>
+
 
       {/* Community posts */}
       <div className="px-6 space-y-4 pb-28">
