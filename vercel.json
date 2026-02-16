@@ -1,0 +1,16 @@
+{
+    "rewrites": [
+        {
+            "source": "/google(.*).html",
+            "destination": "/google$1.html"
+        },
+        {
+            "source": "/api/:path*",
+            "destination": "/api/:path*"
+        },
+        {
+            "source": "/((?!sitemap.xml|robots.txt).*)",
+            "destination": "/index.html"
+        }
+    ]
+}

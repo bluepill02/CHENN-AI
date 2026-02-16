@@ -1,0 +1,399 @@
+{
+  "600001": {
+    "busStops": [
+      "Parry's Corner Bus Stand",
+      "High Court Bus Stop",
+      "Broadway Bus Terminus",
+      "NSC Bose Road"
+    ],
+    "twitterQueries": [
+      "Parrys Corner Chennai",
+      "High Court Chennai traffic",
+      "Broadway Chennai",
+      "George Town Chennai",
+      "Chennai Central area",
+      "#ChennaiTraffic Parrys"
+    ]
+  },
+  "600002": {
+    "busStops": [
+      "Chintadripet",
+      "Anna Salai"
+    ],
+    "twitterQueries": [
+      "Anna Salai Chennai",
+      "Chintadripet Chennai",
+      "Mount Road Chennai",
+      "Anna Salai traffic",
+      "#ChennaiTraffic Anna Salai",
+      "LIC Chennai"
+    ]
+  },
+  "600003": {
+    "busStops": [
+      "Chennai Central Station",
+      "Park Town",
+      "General Hospital",
+      "Ripon Building"
+    ],
+    "twitterQueries": [
+      "Chennai Central Station",
+      "Park Town Chennai",
+      "General Hospital Chennai",
+      "Ripon Building Chennai",
+      "Chennai Central traffic",
+      "#ChennaiRailway"
+    ]
+  },
+  "600004": {
+    "busStops": [
+      "Mylapore Tank Bus Stop",
+      "Luz Corner",
+      "Santhome Church",
+      "Mandaveli Bus Depot"
+    ],
+    "twitterQueries": [
+      "Mylapore Chennai",
+      "Luz Corner traffic",
+      "Santhome Chennai",
+      "Mandaveli Chennai",
+      "Kapaleeswarar Temple",
+      "#MylaporeChennai"
+    ]
+  },
+  "600005": {
+    "busStops": [
+      "Chepauk",
+      "Bells Road",
+      "M.A. Chidambaram Stadium",
+      "Triplicane Bus Stand"
+    ],
+    "twitterQueries": [
+      "Chepauk Chennai",
+      "MA Chidambaram Stadium",
+      "Triplicane Chennai",
+      "Chepauk traffic",
+      "#ChennaiCricket",
+      "IPL Chennai"
+    ]
+  },
+  "600006": {
+    "busStops": [
+      "Thousand Lights",
+      "Gemini (Anna Flyover)",
+      "TVS Bus Stop",
+      "US Consulate",
+      "Greams Road"
+    ],
+    "twitterQueries": [
+      "Thousand Lights Chennai",
+      "Gemini Flyover traffic",
+      "Anna Flyover Chennai",
+      "Greams Road Chennai",
+      "US Consulate Chennai",
+      "#ChennaiTraffic Thousand Lights"
+    ]
+  },
+  "600007": {
+    "busStops": [
+      "Vepery Police Station",
+      "Periamet",
+      "Doveton",
+      "Nehru Park"
+    ],
+    "twitterQueries": [
+      "Vepery Chennai",
+      "Periamet Chennai",
+      "Doveton Chennai",
+      "Nehru Park Chennai",
+      "Vepery traffic",
+      "#ChennaiPolice"
+    ]
+  },
+  "600008": {
+    "busStops": [
+      "Egmore Bus Stand",
+      "Egmore Railway Station"
+    ],
+    "twitterQueries": [
+      "Egmore Chennai",
+      "Egmore Railway Station",
+      "Egmore traffic",
+      "#ChennaiRailway Egmore",
+      "Egmore Metro",
+      "Chennai Egmore"
+    ]
+  },
+  "600009": {
+    "busStops": [
+      "Fort St. George",
+      "High Court",
+      "Marina"
+    ],
+    "twitterQueries": [
+      "Fort St George Chennai",
+      "High Court Chennai",
+      "Marina Beach Chennai",
+      "#ChennaiGovt",
+      "Chennai Fort",
+      "Marina traffic"
+    ]
+  },
+  "600010": {
+    "busStops": [
+      "Kilpauk",
+      "Kilpauk Medical College (KMC)",
+      "New Avadi Road"
+    ],
+    "twitterQueries": [
+      "Kilpauk Chennai",
+      "Kilpauk Medical College",
+      "KMC Chennai",
+      "New Avadi Road traffic",
+      "#ChennaiMedical",
+      "Government Hospital Chennai"
+    ]
+  },
+  "600011": {
+    "busStops": [
+      "Perambur Bus Stand",
+      "Vyasarpadi Jeeva",
+      "Perambur Railway Station",
+      "Sembium"
+    ],
+    "twitterQueries": [
+      "Perambur Chennai",
+      "Vyasarpadi Chennai",
+      "Perambur Railway Station",
+      "Sembium Chennai",
+      "#ChennaiRailway Perambur",
+      "Perambur traffic"
+    ]
+  },
+  "600012": {
+    "busStops": [
+      "Perambur Barracks",
+      "Pulianthope",
+      "Strahans Road"
+    ],
+    "twitterQueries": [
+      "Perambur Barracks Chennai",
+      "Pulianthope Chennai",
+      "Strahans Road Chennai",
+      "Perambur traffic",
+      "#ChennaiNorth",
+      "ICF Chennai"
+    ]
+  },
+  "600013": {
+    "busStops": [
+      "Royapuram Bus Stand",
+      "Stanley Hospital",
+      "Kalmandapam",
+      "Royapuram Bridge"
+    ],
+    "twitterQueries": [
+      "Royapuram Chennai",
+      "Stanley Hospital Chennai",
+      "Royapuram Bridge traffic",
+      "Kalmandapam Chennai",
+      "#ChennaiMedical Stanley",
+      "Royapuram traffic"
+    ]
+  },
+  "600014": {
+    "busStops": [
+      "Royapettah Clock Tower",
+      "Triplicane South"
+    ],
+    "twitterQueries": [
+      "Royapettah Chennai",
+      "Royapettah Clock Tower",
+      "Triplicane Chennai",
+      "Royapettah traffic",
+      "#ChennaiHeritage",
+      "Triplicane traffic"
+    ]
+  },
+  "600015": {
+    "busStops": [
+      "Saidapet Bus Stand",
+      "Saidapet Court",
+      "Panagal Maligai",
+      "Little Mount"
+    ],
+    "twitterQueries": [
+      "Saidapet Chennai",
+      "Saidapet Court",
+      "Little Mount Chennai",
+      "Panagal Maligai",
+      "Saidapet traffic",
+      "#ChennaiSouth"
+    ]
+  },
+  "600016": {
+    "busStops": ["Alandur", "Butt Road"],
+    "twitterQueries": [
+      "Alandur Chennai",
+      "Butt Road traffic",
+      "Alandur Metro",
+      "#ChennaiMetro Alandur",
+      "Alandur traffic",
+      "Chennai Airport road"
+    ]
+  },
+  "600017": {
+    "busStops": ["T. Nagar Bus Stand", "Panagal Park", "Pondy Bazaar"],
+    "twitterQueries": [
+      "T Nagar Chennai",
+      "Pondy Bazaar traffic",
+      "T Nagar shopping",
+      "Panagal Park Chennai",
+      "#TNagarChennai",
+      "Ranganathan Street"
+    ]
+  },
+  "600018": {
+    "busStops": ["Teynampet", "SIET", "Eldams Road"],
+    "twitterQueries": [
+      "Teynampet Chennai",
+      "Eldams Road traffic",
+      "SIET Chennai",
+      "Teynampet Metro",
+      "#ChennaiMetro Teynampet",
+      "Nandanam traffic"
+    ]
+  },
+  "600019": {
+    "busStops": ["Tiruvottiyur", "Kaladipet", "Wimco Nagar", "Tondiarpet Railway Colony"],
+    "twitterQueries": [
+      "Tiruvottiyur Chennai",
+      "Kaladipet Chennai",
+      "Wimco Nagar traffic",
+      "Tondiarpet Chennai",
+      "#ChennaiNorth Tiruvottiyur",
+      "Ennore traffic"
+    ]
+  },
+  "600020": {
+    "busStops": ["Adyar Depot", "Adyar Signal", "L.B. Road", "Thiruvanmiyur Bus Depot"],
+    "twitterQueries": [
+      "Adyar Chennai",
+      "LB Road traffic",
+      "Thiruvanmiyur Chennai",
+      "Adyar Signal traffic",
+      "#AdyarChennai",
+      "Besant Nagar traffic"
+    ]
+  },
+  "600021": {
+    "busStops": ["Washermanpet", "Korukkupet", "Tondiarpet"],
+    "twitterQueries": [
+      "Washermanpet Chennai",
+      "Korukkupet Chennai",
+      "Tondiarpet traffic",
+      "#ChennaiNorth",
+      "Washermanpet traffic",
+      "Chennai Port area"
+    ]
+  },
+  "600022": {
+    "busStops": ["Raj Bhavan", "Guindy Estate", "Anna University"],
+    "twitterQueries": [
+      "Raj Bhavan Chennai",
+      "Guindy Chennai",
+      "Anna University",
+      "Anna University traffic",
+      "#AnnaUniversity",
+      "CEG Chennai"
+    ]
+  },
+  "600023": {
+    "busStops": ["Ayanavaram", "Perambur", "Konnur High Road"],
+    "twitterQueries": [
+      "Ayanavaram Chennai",
+      "Perambur Chennai",
+      "Konnur High Road traffic",
+      "#ChennaiNorth",
+      "Ayanavaram traffic",
+      "ICF Chennai"
+    ]
+  },
+  "600024": {
+    "busStops": ["Kodambakkam", "Rangarajapuram", "T. Nagar Depot"],
+    "twitterQueries": [
+      "Kodambakkam Chennai",
+      "Rangarajapuram Chennai",
+      "T Nagar traffic",
+      "Kodambakkam traffic",
+      "#KodambakkamChennai",
+      "Vadapalani traffic"
+    ]
+  },
+  "600025": {
+    "busStops": ["Adyar Depot", "Kasturibai Nagar", "Indira Nagar"],
+    "twitterQueries": [
+      "Adyar Chennai",
+      "Kasturibai Nagar Chennai",
+      "Indira Nagar Chennai",
+      "Adyar traffic",
+      "#AdyarChennai",
+      "Gandhinagar Chennai"
+    ]
+  },
+  "600026": {
+    "busStops": ["Vadapalani", "Vadapalani Bus Depot", "Vadapalani Andavar Temple"],
+    "twitterQueries": [
+      "Vadapalani Chennai",
+      "Vadapalani Metro",
+      "Vadapalani Murugan Temple",
+      "Vadapalani traffic",
+      "#VadapalaniChennai",
+      "Vadapalani bus"
+    ]
+  },
+  "600027": {
+    "busStops": ["Meenambakkam Airport", "Pallavaram", "Chromepet"],
+    "twitterQueries": [
+      "Chennai Airport",
+      "Meenambakkam traffic",
+      "Pallavaram Chennai",
+      "Chromepet Chennai",
+      "#ChennaiAirport",
+      "Airport road traffic"
+    ]
+  },
+  "600028": {
+    "busStops": ["Mandaveli", "R.A. Puram", "Mylapore", "Santhome"],
+    "twitterQueries": [
+      "Mandaveli Chennai",
+      "RA Puram Chennai",
+      "Mylapore Chennai",
+      "Santhome Chennai",
+      "#MylaporeChennai",
+      "Luz Corner traffic"
+    ]
+  },
+  "600029": {
+    "busStops": ["Aminjikarai", "Nelson Manickam Road"],
+    "twitterQueries": [
+      "Aminjikarai Chennai",
+      "Nelson Manickam Road traffic",
+      "Chetpet Chennai",
+      "Aminjikarai traffic",
+      "#ChennaiNorth",
+      "Chetpet Lake"
+    ]
+  },
+  "600030": {
+    "busStops": ["Santhome", "Luz", "Foreshore Estate"],
+    "twitterQueries": [
+      "Santhome Chennai",
+      "Luz Chennai",
+      "Foreshore Estate Chennai",
+      "Santhome Cathedral",
+      "#SanthomeChennai",
+      "Marina Beach area"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+
+Total Pincodes Checked: 130
+Full Coverage (Bus + Metro + Train): 16
+Partial Coverage: 110
+Missing Data: 4
+Missing Pincodes: 600079, 600080, 600082, 600084
